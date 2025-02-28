@@ -28,7 +28,10 @@ public class StartStateHandler implements StateHandler {
             return new SendMessage(chatId, BotMessages.UNKNOWN_COMMAND);
         }
 
-        botService.registerUser(chatId);
+        var response = botService.registerUser(chatId);
+        if (response != null && response.isError()) {
+            return new SendMessage(chatId, "Ошибка регистрации чата: " + response.getErrorMessage());
+        }
 
         return new SendMessage(chatId, BotMessages.START_HANDLE);
     }
