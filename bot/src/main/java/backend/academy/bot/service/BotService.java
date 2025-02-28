@@ -10,7 +10,7 @@ public interface BotService {
 
     OptionalAnswer<LinkResponse> linkUrlToUser(String url, Long userId);
 
-    OptionalAnswer<LinkResponse>  unlinkUrlFromUser(Long linkId, Long userId);
+    OptionalAnswer<LinkResponse> unlinkUrlFromUser(Long linkId, Long userId);
 
     OptionalAnswer<ListLinksResponse> showAllLinks(Long userId);
 }

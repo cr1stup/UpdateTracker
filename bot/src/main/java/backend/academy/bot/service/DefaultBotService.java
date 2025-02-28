@@ -1,5 +1,6 @@
 package backend.academy.bot.service;
 
+import backend.academy.bot.client.ScrapperClient;
 import backend.academy.bot.client.dto.LinkResponse;
 import backend.academy.bot.client.dto.ListLinksResponse;
 import backend.academy.bot.dto.OptionalAnswer;
@@ -10,9 +11,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DefaultBotService implements BotService {
 
+    private final ScrapperClient scrapperClient;
+
     @Override
     public OptionalAnswer<Void> registerUser(Long id) {
-        return null;
+        return scrapperClient.registerChat(id);
     }
 
     @Override
@@ -21,7 +24,7 @@ public class DefaultBotService implements BotService {
     }
 
     @Override
-    public OptionalAnswer<LinkResponse>  unlinkUrlFromUser(Long linkId, Long userId) {
+    public OptionalAnswer<LinkResponse> unlinkUrlFromUser(Long linkId, Long userId) {
         return null;
     }
 
