@@ -1,7 +1,9 @@
 package backend.academy.bot.dto;
 
-import java.util.function.Consumer;
+import backend.academy.bot.util.OptionalAnswerDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize(using = OptionalAnswerDeserializer.class)
 public record OptionalAnswer<T>(T answer, ApiErrorResponse apiErrorResponse) {
 
     public static <T> OptionalAnswer<T> error(ApiErrorResponse apiErrorResponse) {
@@ -14,12 +16,5 @@ public record OptionalAnswer<T>(T answer, ApiErrorResponse apiErrorResponse) {
 
     public boolean isError() {
         return apiErrorResponse != null;
-    }
-
-    public OptionalAnswer<T> ifError(Consumer<ApiErrorResponse> consumer) {
-        if (isError()) {
-            consumer.accept(apiErrorResponse);
-        }
-        return this;
     }
 }
