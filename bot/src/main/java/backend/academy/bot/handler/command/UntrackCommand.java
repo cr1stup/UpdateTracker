@@ -8,20 +8,20 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
-@Order(3)
-public class TrackCommand implements Command {
+@Order(4)
+public class UntrackCommand implements Command {
     @Override
     public String name() {
-        return BotMessages.TRACK_NAME;
+        return BotMessages.UNTRACK_NAME;
     }
 
     @Override
     public String description() {
-        return BotMessages.TRACK_DESCRIPTION;
+        return BotMessages.UNTRACK_DESCRIPTION;
     }
 
     @Override
     public void setState(Update update) {
-        BotStateRepository.setState(update.message().chat().id(), BotState.TRACK);
+        BotStateRepository.setState(update.message().chat().id() ,BotState.UNTRACK);
     }
 }

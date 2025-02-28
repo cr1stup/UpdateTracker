@@ -12,4 +12,7 @@ public interface BotMessages {
 
     String TRACK_NAME = "/track";
     String TRACK_DESCRIPTION = "track description";
+
+    String UNTRACK_NAME = "/untrack";
+    String UNTRACK_DESCRIPTION = "untrack description";
 }
