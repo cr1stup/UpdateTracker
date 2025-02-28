@@ -9,4 +9,7 @@ public interface BotMessages {
 
     String HELP_NAME = "/help";
     String HELP_DESCRIPTION = "help description";
+
+    String TRACK_NAME = "/track";
+    String TRACK_DESCRIPTION = "track description";
 }
