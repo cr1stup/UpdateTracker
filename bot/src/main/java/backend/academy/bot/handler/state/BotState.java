@@ -4,5 +4,6 @@ public enum BotState {
     START,
     HELP,
     TRACK,
-    UNTRACK
+    UNTRACK,
+    LIST
 }
