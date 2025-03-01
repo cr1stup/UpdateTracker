@@ -2,6 +2,7 @@ package backend.academy.bot.handler.state;
 
 import backend.academy.bot.service.BotService;
 import backend.academy.bot.util.BotMessages;
+import backend.academy.bot.util.LinkUtil;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class TrackStateHandler implements StateHandler {
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
         String[] userText = update.message().text().split(" ");
-        String link = getLink(userText);
+        String link = LinkUtil.getLink(userText);
 
         if (link == null && BotMessages.TRACK_NAME.equals(userText[0])) {
             return new SendMessage(chatId, "Введите ссылку для отслеживания");
@@ -37,19 +38,5 @@ public class TrackStateHandler implements StateHandler {
         }
 
         return new SendMessage(chatId, "Ваша сслыка успешно сохранена для отслеживания!");
-    }
-
-
-    private String getLink(String[] text) {
-        for (String message : text) {
-            if (isLink(message)) {
-                return message;
-            }
-        }
-        return null;
-    }
-
-    private boolean isLink(String s) {
-        return s.startsWith("http://") || s.startsWith("https://");
     }
 }
