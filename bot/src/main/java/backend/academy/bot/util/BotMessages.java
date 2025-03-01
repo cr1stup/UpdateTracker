@@ -15,4 +15,7 @@ public interface BotMessages {
 
     String UNTRACK_NAME = "/untrack";
     String UNTRACK_DESCRIPTION = "untrack description";
+
+    String LIST_NAME = "/list";
+    String LIST_DESCRIPTION = "list description";
 }
