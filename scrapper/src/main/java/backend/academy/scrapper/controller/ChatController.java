@@ -1,7 +1,6 @@
 package backend.academy.scrapper.controller;
 
 import backend.academy.scrapper.service.ChatService;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
