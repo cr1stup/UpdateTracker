@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class DefaultBotRepository implements BotRepository  {
+public class DefaultBotRepository implements BotRepository {
     private static final Map<Long, Params> botParams = new HashMap<>();
 
     @Override
@@ -23,9 +23,7 @@ public class DefaultBotRepository implements BotRepository  {
 
     @Override
     public BotState getState(Long id) {
-        return botParams.containsKey(id)
-            ? botParams.get(id).botState
-            : BotState.START;
+        return botParams.containsKey(id) ? botParams.get(id).botState : BotState.START;
     }
 
     @Override
@@ -35,9 +33,7 @@ public class DefaultBotRepository implements BotRepository  {
 
     @Override
     public String getLink(Long id) {
-        return botParams.containsKey(id)
-            ? botParams.get(id).link
-            : null;
+        return botParams.containsKey(id) ? botParams.get(id).link : null;
     }
 
     @Override
@@ -47,9 +43,7 @@ public class DefaultBotRepository implements BotRepository  {
 
     @Override
     public List<String> getTags(Long id) {
-        return botParams.containsKey(id)
-            ? botParams.get(id).tags
-            : null;
+        return botParams.containsKey(id) ? botParams.get(id).tags : null;
     }
 
     @Override
@@ -59,9 +53,7 @@ public class DefaultBotRepository implements BotRepository  {
 
     @Override
     public List<String> getFilters(Long id) {
-        return botParams.containsKey(id)
-            ? botParams.get(id).filters
-            : null;
+        return botParams.containsKey(id) ? botParams.get(id).filters : null;
     }
 
     @Getter

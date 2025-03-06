@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
-
 import java.io.IOException;
 
 public class OptionalAnswerDeserializer extends JsonDeserializer<OptionalAnswer<?>> implements ContextualDeserializer {
@@ -33,7 +32,7 @@ public class OptionalAnswerDeserializer extends JsonDeserializer<OptionalAnswer<
         }
 
         return valueType.hasRawClass(Void.class)
-            ? OptionalAnswer.of(null)
-            : OptionalAnswer.of(mapper.treeToValue(node, valueType.getRawClass()));
+                ? OptionalAnswer.of(null)
+                : OptionalAnswer.of(mapper.treeToValue(node, valueType.getRawClass()));
     }
 }

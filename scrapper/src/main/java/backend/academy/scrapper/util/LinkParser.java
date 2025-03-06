@@ -1,8 +1,8 @@
 package backend.academy.scrapper.util;
 
-import lombok.experimental.UtilityClass;
 import java.net.URI;
 import java.util.regex.Pattern;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class LinkParser {

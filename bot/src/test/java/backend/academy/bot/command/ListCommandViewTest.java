@@ -1,5 +1,10 @@
 package backend.academy.bot.command;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import backend.academy.bot.client.dto.LinkResponse;
 import backend.academy.bot.client.dto.ListLinksResponse;
 import backend.academy.bot.dto.OptionalAnswer;
@@ -21,10 +26,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ListCommandViewTest {
@@ -69,16 +70,14 @@ class ListCommandViewTest {
     @DisplayName("return formatted list of tracked links")
     void testTrackedListWithLinks() {
         ListLinksResponse response = new ListLinksResponse(
-            List.of(
-                new LinkResponse(1L, URI.create("https://example.com/1"), List.of(), List.of()),
-                new LinkResponse(2L, URI.create("https://example.com/2"), List.of(), List.of())
-            ),
-            2
-        );
+                List.of(
+                        new LinkResponse(1L, URI.create("https://example.com/1"), List.of(), List.of()),
+                        new LinkResponse(2L, URI.create("https://example.com/2"), List.of(), List.of())),
+                2);
         OptionalAnswer<ListLinksResponse> optionalAnswer = OptionalAnswer.of(response);
         when(botService.getAllLinks(chatId)).thenReturn(optionalAnswer);
-        String expectedMessage = "Список отслеживаемых ссылок:%n1. https://example.com/1%n2. https://example.com/2%n"
-            .formatted();
+        String expectedMessage =
+                "Список отслеживаемых ссылок:%n1. https://example.com/1%n2. https://example.com/2%n".formatted();
 
         SendMessage result = listStateHandler.handle(updateMock);
 
@@ -86,4 +85,3 @@ class ListCommandViewTest {
         verify(botRepository).setState(chatId, BotState.START);
     }
 }
-

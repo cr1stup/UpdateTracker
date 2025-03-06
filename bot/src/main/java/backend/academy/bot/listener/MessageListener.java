@@ -24,8 +24,8 @@ public class MessageListener implements UpdatesListener {
             SendMessage sendMessage = commandProcessor.process(update);
             if (sendMessage != null) {
                 requestExecutor.execute(sendMessage
-                    .parseMode(ParseMode.Markdown)
-                    .linkPreviewOptions(new LinkPreviewOptions().isDisabled(true)));
+                        .parseMode(ParseMode.Markdown)
+                        .linkPreviewOptions(new LinkPreviewOptions().isDisabled(true)));
             }
         });
 

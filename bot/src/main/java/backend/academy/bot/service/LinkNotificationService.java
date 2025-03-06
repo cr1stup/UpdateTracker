@@ -5,5 +5,4 @@ import backend.academy.bot.dto.LinkUpdate;
 public interface LinkNotificationService {
 
     void notifyLinkUpdate(LinkUpdate link);
-
 }

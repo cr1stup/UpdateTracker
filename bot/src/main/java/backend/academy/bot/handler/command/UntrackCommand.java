@@ -27,6 +27,6 @@ public class UntrackCommand implements Command {
 
     @Override
     public void setState(Update update) {
-        botRepository.setState(update.message().chat().id() ,BotState.UNTRACK);
+        botRepository.setState(update.message().chat().id(), BotState.UNTRACK);
     }
 }

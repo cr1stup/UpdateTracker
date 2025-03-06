@@ -20,17 +20,16 @@ public class ClientConfig {
     @Bean
     public WebClient webClient(WebClient.Builder webClientBuilder) {
         return webClientBuilder
-            .defaultStatusHandler(httpStatusCode -> true, clientResponse -> Mono.empty())
-            .defaultHeader("Content-Type", "application/json")
-            .baseUrl(botUrl)
-            .build();
+                .defaultStatusHandler(httpStatusCode -> true, clientResponse -> Mono.empty())
+                .defaultHeader("Content-Type", "application/json")
+                .baseUrl(botUrl)
+                .build();
     }
 
     @Bean
     public BotClient botClient(WebClient webClient) {
-        HttpServiceProxyFactory factory = HttpServiceProxyFactory
-            .builderFor(WebClientAdapter.create(webClient))
-            .build();
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(WebClientAdapter.create(webClient))
+                .build();
 
         return factory.createClient(BotClient.class);
     }

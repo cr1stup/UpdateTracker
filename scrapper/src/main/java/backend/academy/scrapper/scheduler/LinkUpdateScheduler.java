@@ -24,24 +24,21 @@ public class LinkUpdateScheduler {
 
     @Scheduled(fixedDelayString = "#{@'app-backend.academy.scrapper.config.ScrapperConfig'.scheduler.interval}")
     public void update() {
-        linkService.getListLinkToCheck(scrapperConfig.scheduler().forceCheckDelay())
-            .forEach(link -> {
-                URI url = URI.create(link.url());
-                LinkClient client = clientFactory.getClient(url);
-                LinkInformation linkInformation = client.fetchInformation(url);
-                processLinkInformation(linkInformation, link);
-            });
+        linkService
+                .getListLinkToCheck(scrapperConfig.scheduler().forceCheckDelay())
+                .forEach(link -> {
+                    URI url = URI.create(link.url());
+                    LinkClient client = clientFactory.getClient(url);
+                    LinkInformation linkInformation = client.fetchInformation(url);
+                    processLinkInformation(linkInformation, link);
+                });
     }
 
     private void processLinkInformation(LinkInformation linkInformation, Link link) {
         if (linkInformation.lastModified().isAfter(link.updatedAt())) {
             linkService.update(link.url(), linkInformation.lastModified());
             botClient.handleUpdates(new LinkUpdate(
-                link.id(),
-                URI.create(link.url()),
-                linkInformation.title(),
-                linkService.getListOfChatId(link)
-            ));
+                    link.id(), URI.create(link.url()), linkInformation.title(), linkService.getListOfChatId(link)));
         } else {
             linkService.checkNow(link.url());
         }

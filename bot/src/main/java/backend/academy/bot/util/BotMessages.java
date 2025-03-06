@@ -5,7 +5,8 @@ public interface BotMessages {
 
     String START_NAME = "/start";
     String START_DESCRIPTION = "регистрация пользователя";
-    String START_HANDLE = """
+    String START_HANDLE =
+            """
         Добро пожаловать в бот для отслеживания обновлений по ссылкам!
         Введите /help для просмортра доступных команд
         """;

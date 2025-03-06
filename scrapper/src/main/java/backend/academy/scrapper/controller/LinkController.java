@@ -29,17 +29,13 @@ public class LinkController {
 
     @PostMapping
     public LinkResponse addLink(
-        @RequestHeader(name = "Tg-Chat-Id") Long tgChatId,
-        @RequestBody @Valid AddLinkRequest addLinkRequest
-    ) {
+            @RequestHeader(name = "Tg-Chat-Id") Long tgChatId, @RequestBody @Valid AddLinkRequest addLinkRequest) {
         return linkService.addLink(addLinkRequest, tgChatId);
     }
 
     @DeleteMapping
     public LinkResponse removeLink(
-        @RequestHeader(name = "Tg-Chat-Id") Long tgChatId,
-        @RequestBody @Valid RemoveLinkRequest addLinkRequest
-    ) {
+            @RequestHeader(name = "Tg-Chat-Id") Long tgChatId, @RequestBody @Valid RemoveLinkRequest addLinkRequest) {
         return linkService.removeLink(addLinkRequest.link(), tgChatId);
     }
 }

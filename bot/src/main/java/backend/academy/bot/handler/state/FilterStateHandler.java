@@ -15,7 +15,7 @@ public class FilterStateHandler implements StateHandler {
 
     private final BotService botService;
     private final BotRepository botRepository;
-    private final static int MAX_FILTERS = ChatLimits.MAX_FILTERS;
+    private static final int MAX_FILTERS = ChatLimits.MAX_FILTERS;
 
     @Override
     public BotState state() {
@@ -34,11 +34,7 @@ public class FilterStateHandler implements StateHandler {
         }
 
         var response = botService.linkUrlToUser(
-            botRepository.getLink(chatId),
-            chatId,
-            botRepository.getTags(chatId),
-            botRepository.getFilters(chatId)
-        );
+                botRepository.getLink(chatId), chatId, botRepository.getTags(chatId), botRepository.getFilters(chatId));
 
         botRepository.setState(chatId, BotState.START);
 

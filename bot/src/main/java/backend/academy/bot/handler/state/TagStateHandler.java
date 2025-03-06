@@ -1,13 +1,12 @@
 package backend.academy.bot.handler.state;
 
 import backend.academy.bot.repository.BotRepository;
-import backend.academy.bot.repository.DefaultBotRepository;
 import backend.academy.bot.util.ChatLimits;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
@@ -34,7 +33,8 @@ public class TagStateHandler implements StateHandler {
         }
 
         botRepository.setState(chatId, BotState.FILTER);
-        return new SendMessage(chatId,
-            "Введите фильтры (не больше %d) через пробел или \"null\", если хотите без них".formatted(MAX_FILTERS));
+        return new SendMessage(
+                chatId,
+                "Введите фильтры (не больше %d) через пробел или \"null\", если хотите без них".formatted(MAX_FILTERS));
     }
 }

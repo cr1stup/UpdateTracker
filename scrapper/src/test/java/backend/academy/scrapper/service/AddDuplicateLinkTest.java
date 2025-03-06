@@ -1,9 +1,11 @@
 package backend.academy.scrapper.service;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import backend.academy.scrapper.dto.AddLinkRequest;
 import backend.academy.scrapper.exception.LinkAlreadyAddedException;
 import backend.academy.scrapper.repository.DefaultChatRepository;
-
 import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -13,8 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AddDuplicateLinkTest {
@@ -39,4 +39,3 @@ class AddDuplicateLinkTest {
         verify(chatRepository).isLinkByChatExist(tgChatId, url);
     }
 }
-

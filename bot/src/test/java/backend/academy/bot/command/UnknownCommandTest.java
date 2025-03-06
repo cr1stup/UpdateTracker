@@ -1,5 +1,7 @@
 package backend.academy.bot.command;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import backend.academy.bot.handler.state.StartStateHandler;
 import backend.academy.bot.util.BotMessages;
 import com.pengrad.telegrambot.model.Update;
@@ -10,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 public class UnknownCommandTest {

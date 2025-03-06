@@ -19,8 +19,6 @@ public record OptionalAnswer<T>(T answer, ApiErrorResponse apiErrorResponse) {
     }
 
     public String getErrorMessage() {
-        return apiErrorResponse != null
-            ? apiErrorResponse.exceptionMessage()
-            : "";
+        return apiErrorResponse != null ? apiErrorResponse.exceptionMessage() : "";
     }
 }

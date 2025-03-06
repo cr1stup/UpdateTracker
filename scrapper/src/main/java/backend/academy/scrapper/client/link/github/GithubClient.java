@@ -3,9 +3,9 @@ package backend.academy.scrapper.client.link.github;
 import backend.academy.scrapper.client.link.LinkClient;
 import backend.academy.scrapper.config.ScrapperConfig;
 import backend.academy.scrapper.dto.LinkInformation;
+import backend.academy.scrapper.util.LinkParser;
 import java.net.URI;
 import java.util.regex.Pattern;
-import backend.academy.scrapper.util.LinkParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -17,15 +17,16 @@ public class GithubClient implements LinkClient {
     private final WebClient webClient;
 
     @Autowired
-    public GithubClient(@Value("${api.github.url}") String apiUrl, WebClient.Builder webClientBuilder, ScrapperConfig config) {
+    public GithubClient(
+            @Value("${api.github.url}") String apiUrl, WebClient.Builder webClientBuilder, ScrapperConfig config) {
         this.webClient = webClientBuilder
-            .baseUrl(apiUrl)
-            .defaultHeaders(headers -> {
-                if (config.githubToken() != null && !config.githubToken().isEmpty()) {
-                    headers.set("Authorization", "Bearer " + config.githubToken());
-                }
-            })
-            .build();
+                .baseUrl(apiUrl)
+                .defaultHeaders(headers -> {
+                    if (config.githubToken() != null && !config.githubToken().isEmpty()) {
+                        headers.set("Authorization", "Bearer " + config.githubToken());
+                    }
+                })
+                .build();
     }
 
     @Override
@@ -35,12 +36,7 @@ public class GithubClient implements LinkClient {
 
     @Override
     public LinkInformation fetchInformation(URI url) {
-        var info = executeRequest(
-            webClient,
-            "/repos" + url.getPath(),
-            RepositoryInfo.class,
-            RepositoryInfo.EMPTY
-        );
+        var info = executeRequest(webClient, "/repos" + url.getPath(), RepositoryInfo.class, RepositoryInfo.EMPTY);
 
         if (info == null || info.equals(RepositoryInfo.EMPTY)) {
             return null;

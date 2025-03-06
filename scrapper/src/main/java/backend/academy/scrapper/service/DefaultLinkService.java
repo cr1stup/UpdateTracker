@@ -36,8 +36,8 @@ public class DefaultLinkService implements LinkService {
         var links = chatRepository.getLinksByChat(tgChatId);
 
         var linkResponses = links.stream()
-            .map(link -> new LinkResponse(link.id(), URI.create(link.url()), link.tags(), link.filters()))
-            .toList();
+                .map(link -> new LinkResponse(link.id(), URI.create(link.url()), link.tags(), link.filters()))
+                .toList();
 
         return new ListLinksResponse(linkResponses, linkResponses.size());
     }
@@ -65,13 +65,12 @@ public class DefaultLinkService implements LinkService {
         }
 
         Link link = new Link(
-            0,
-            url.toString(),
-            request.tags(),
-            request.filters(),
-            linkInformation.lastModified(),
-            OffsetDateTime.now(ZoneId.systemDefault())
-        );
+                0,
+                url.toString(),
+                request.tags(),
+                request.filters(),
+                linkInformation.lastModified(),
+                OffsetDateTime.now(ZoneId.systemDefault()));
 
         var id = linkRepository.addChatByLink(tgChatId, link);
         chatRepository.addLinkByChat(tgChatId, link);
@@ -91,9 +90,9 @@ public class DefaultLinkService implements LinkService {
         var links = linkRepository.getAllLinks();
 
         return links.stream()
-            .filter(link -> link.lastCheckedAt().isBefore(threshold))
-            .sorted(Comparator.comparing(Link::lastCheckedAt))
-            .collect(Collectors.toList());
+                .filter(link -> link.lastCheckedAt().isBefore(threshold))
+                .sorted(Comparator.comparing(Link::lastCheckedAt))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -104,21 +103,18 @@ public class DefaultLinkService implements LinkService {
     @Override
     public void update(String url, OffsetDateTime lastModified) {
         var links = linkRepository.getAllLinks();
-        links.stream()
-            .filter(link -> url.equals(link.url()))
-            .findFirst()
-            .ifPresent(link -> {
-                link.lastCheckedAt(OffsetDateTime.now(ZoneId.systemDefault()));
-                link.updatedAt(lastModified);
-            });
+        links.stream().filter(link -> url.equals(link.url())).findFirst().ifPresent(link -> {
+            link.lastCheckedAt(OffsetDateTime.now(ZoneId.systemDefault()));
+            link.updatedAt(lastModified);
+        });
     }
 
     @Override
     public void checkNow(String url) {
         var links = linkRepository.getAllLinks();
         links.stream()
-            .filter(link -> url.equals(link.url()))
-            .findFirst()
-            .ifPresent(link -> link.lastCheckedAt(OffsetDateTime.now(ZoneId.systemDefault())));
+                .filter(link -> url.equals(link.url()))
+                .findFirst()
+                .ifPresent(link -> link.lastCheckedAt(OffsetDateTime.now(ZoneId.systemDefault())));
     }
 }

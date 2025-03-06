@@ -18,5 +18,5 @@ public interface BotRepository {
 
     void setFilters(Long id, List<String> filters);
 
-    List<String> getFilters(Long id) ;
+    List<String> getFilters(Long id);
 }

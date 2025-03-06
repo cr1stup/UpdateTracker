@@ -6,10 +6,10 @@ import backend.academy.bot.client.dto.LinkResponse;
 import backend.academy.bot.client.dto.ListLinksResponse;
 import backend.academy.bot.client.dto.RemoveLinkRequest;
 import backend.academy.bot.dto.OptionalAnswer;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +23,8 @@ public class DefaultBotService implements BotService {
     }
 
     @Override
-    public OptionalAnswer<LinkResponse> linkUrlToUser(String url, Long userId, List<String> tags, List<String> filters) {
+    public OptionalAnswer<LinkResponse> linkUrlToUser(
+            String url, Long userId, List<String> tags, List<String> filters) {
         return scrapperClient.addLink(userId, new AddLinkRequest(URI.create(url), tags, filters));
     }
 

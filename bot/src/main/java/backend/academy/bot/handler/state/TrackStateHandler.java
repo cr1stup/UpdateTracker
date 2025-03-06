@@ -16,7 +16,6 @@ public class TrackStateHandler implements StateHandler {
     private final BotRepository botRepository;
     private static final int MAX_TAGS = ChatLimits.MAX_TAGS;
 
-
     @Override
     public BotState state() {
         return BotState.TRACK;
@@ -37,7 +36,8 @@ public class TrackStateHandler implements StateHandler {
         botRepository.setLink(chatId, link);
         botRepository.setState(chatId, BotState.TAG);
 
-        return new SendMessage(chatId,
-            "Введите тэги (не больше %d) через пробел или \"null\", если хотите без них".formatted(MAX_TAGS));
+        return new SendMessage(
+                chatId,
+                "Введите тэги (не больше %d) через пробел или \"null\", если хотите без них".formatted(MAX_TAGS));
     }
 }

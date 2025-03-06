@@ -26,9 +26,8 @@ public class ScrapperConfig {
 
     @Bean
     public ScrapperClient scrapperClient(WebClient webClient) {
-        HttpServiceProxyFactory factory = HttpServiceProxyFactory
-            .builderFor(WebClientAdapter.create(webClient))
-            .build();
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(WebClientAdapter.create(webClient))
+                .build();
 
         return factory.createClient(ScrapperClient.class);
     }

@@ -2,18 +2,15 @@ package backend.academy.scrapper.config;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
-import java.time.Duration;
 
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
-public record ScrapperConfig(@NotNull Scheduler scheduler, @NotEmpty String githubToken, StackOverflowCredentials stackOverflow) {
+public record ScrapperConfig(
+        @NotNull Scheduler scheduler, @NotEmpty String githubToken, StackOverflowCredentials stackOverflow) {
     public record StackOverflowCredentials(@NotEmpty String key, @NotEmpty String accessToken) {}
 
-    public record Scheduler(
-        boolean enable,
-        @NotNull Duration interval,
-        @NotNull Duration forceCheckDelay
-    ) {}
+    public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {}
 }

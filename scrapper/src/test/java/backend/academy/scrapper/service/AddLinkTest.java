@@ -1,5 +1,10 @@
 package backend.academy.scrapper.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import backend.academy.scrapper.client.link.ClientFactory;
 import backend.academy.scrapper.client.link.LinkClient;
 import backend.academy.scrapper.dto.AddLinkRequest;
@@ -18,10 +23,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AddLinkTest {
@@ -71,7 +72,8 @@ class AddLinkTest {
         when(chatRepository.isLinkByChatExist(TG_CHAT_ID, URL)).thenReturn(false);
         when(clientFactory.getClient(URL)).thenReturn(client);
         when(client.fetchInformation(URL)).thenReturn(linkInformation);
-        when(linkRepository.addChatByLink(Mockito.anyLong(), Mockito.any(Link.class))).thenReturn(123L);
+        when(linkRepository.addChatByLink(Mockito.anyLong(), Mockito.any(Link.class)))
+                .thenReturn(123L);
     }
 
     private void verifyMocks(LinkClient client) {

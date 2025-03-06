@@ -32,7 +32,7 @@ public class OptionalAnswerDeserializer extends JsonDeserializer<OptionalAnswer<
         }
 
         return valueType.hasRawClass(Void.class)
-            ? OptionalAnswer.of(null)
-            : OptionalAnswer.of(mapper.treeToValue(node, valueType.getRawClass()));
+                ? OptionalAnswer.of(null)
+                : OptionalAnswer.of(mapper.treeToValue(node, valueType.getRawClass()));
     }
 }

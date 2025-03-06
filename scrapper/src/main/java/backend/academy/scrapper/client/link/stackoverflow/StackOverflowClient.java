@@ -2,9 +2,9 @@ package backend.academy.scrapper.client.link.stackoverflow;
 
 import backend.academy.scrapper.client.link.LinkClient;
 import backend.academy.scrapper.dto.LinkInformation;
+import backend.academy.scrapper.util.LinkParser;
 import java.net.URI;
 import java.util.regex.Pattern;
-import backend.academy.scrapper.util.LinkParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -30,16 +30,19 @@ public class StackOverflowClient implements LinkClient {
         String questionId = LinkParser.getQuestionId(url, QUESTION_PATTERN);
 
         var info = executeRequest(
-            webClient,
-            "/questions/" + questionId + "?site=stackoverflow",
-            StackOverflowResponse.class,
-            StackOverflowResponse.EMPTY
-        );
+                webClient,
+                "/questions/" + questionId + "?site=stackoverflow",
+                StackOverflowResponse.class,
+                StackOverflowResponse.EMPTY);
 
         if (info == null || info.items() == null || info.items().isEmpty()) {
             return null;
         }
 
-        return new LinkInformation(url, info.items().getFirst().title(), null, info.items().getFirst().lastModified());
+        return new LinkInformation(
+                url,
+                info.items().getFirst().title(),
+                null,
+                info.items().getFirst().lastModified());
     }
 }

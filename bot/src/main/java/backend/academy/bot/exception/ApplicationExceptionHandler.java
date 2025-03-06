@@ -35,14 +35,14 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
     private ResponseEntity<Object> handleIncorrectRequest(Exception ex, HttpStatusCode status) {
         return new ResponseEntity<>(
-            new ApiErrorResponse(
-                "Некорректные параметры запроса",
-                String.valueOf(status.value()),
-                ex.getClass().getSimpleName(),
-                ex.getMessage(),
-                Arrays.stream(ex.getStackTrace()).map(StackTraceElement::toString).toList()
-            ),
-            status
-        );
+                new ApiErrorResponse(
+                        "Некорректные параметры запроса",
+                        String.valueOf(status.value()),
+                        ex.getClass().getSimpleName(),
+                        ex.getMessage(),
+                        Arrays.stream(ex.getStackTrace())
+                                .map(StackTraceElement::toString)
+                                .toList()),
+                status);
     }
 }

@@ -25,16 +25,19 @@ public class DefaultLinkNotificationService implements LinkNotificationService {
 
             try {
                 LinkResponse userLink = listLinks.links().stream()
-                    .filter(response -> response.url().equals(link.url()))
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
+                        .filter(response -> response.url().equals(link.url()))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
 
-                requestExecutor.execute(
-                    new SendMessage(chatId,
-                        "%s: %s %ntags: %s %nfilters: %s".formatted(
-                            BotMessages.UPDATE_MESSAGE, link.url(), userLink.tags(), userLink.filters()))
-                        .linkPreviewOptions(new LinkPreviewOptions().isDisabled(true))
-                );
+                requestExecutor.execute(new SendMessage(
+                                chatId,
+                                "%s: %s %ntags: %s %nfilters: %s"
+                                        .formatted(
+                                                BotMessages.UPDATE_MESSAGE,
+                                                link.url(),
+                                                userLink.tags(),
+                                                userLink.filters()))
+                        .linkPreviewOptions(new LinkPreviewOptions().isDisabled(true)));
 
             } catch (RuntimeException e) {
                 requestExecutor.execute(new SendMessage(chatId, e.getMessage()));
