@@ -3,6 +3,7 @@ package backend.academy.bot.listener;
 import backend.academy.bot.executor.RequestExecutor;
 import backend.academy.bot.processor.CommandProcessor;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.LinkPreviewOptions;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -22,7 +23,9 @@ public class MessageListener implements UpdatesListener {
         updates.forEach(update -> {
             SendMessage sendMessage = commandProcessor.process(update);
             if (sendMessage != null) {
-                requestExecutor.execute(sendMessage.parseMode(ParseMode.Markdown));
+                requestExecutor.execute(sendMessage
+                    .parseMode(ParseMode.Markdown)
+                    .linkPreviewOptions(new LinkPreviewOptions().isDisabled(true)));
             }
         });
 
