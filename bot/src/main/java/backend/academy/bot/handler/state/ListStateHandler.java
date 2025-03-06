@@ -6,11 +6,15 @@ import backend.academy.bot.util.BotMessages;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class ListStateHandler implements StateHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(ListStateHandler.class);
 
     private final BotService botService;
     private final BotRepository botRepository;
@@ -28,6 +32,7 @@ public class ListStateHandler implements StateHandler {
         var response = botService.getAllLinks(chatId).answer();
 
         if (response.links() == null || response.links().isEmpty()) {
+            logger.info("user [{}] list is empty", chatId);
             return new SendMessage(chatId, BotMessages.EMPTY_LIST);
         }
 
@@ -40,6 +45,7 @@ public class ListStateHandler implements StateHandler {
             id++;
         }
 
+        logger.info("user [{}] get list links successfully", chatId);
         return new SendMessage(chatId, linksMessage.toString().formatted());
     }
 }

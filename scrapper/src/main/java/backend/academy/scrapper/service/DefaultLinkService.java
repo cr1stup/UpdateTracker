@@ -20,12 +20,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class DefaultLinkService implements LinkService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DefaultLinkService.class);
 
     private final ChatRepository chatRepository;
     private final LinkRepository linkRepository;
@@ -46,21 +50,25 @@ public class DefaultLinkService implements LinkService {
     @Transactional
     public LinkResponse addLink(AddLinkRequest request, Long tgChatId) {
         if (!chatRepository.isChatExist(tgChatId)) {
+            logger.info("user [{}] not save link: chat not found", tgChatId);
             throw new ChatNotFoundException();
         }
 
         URI url = request.link();
         if (chatRepository.isLinkByChatExist(tgChatId, url)) {
+            logger.info("user [{}] not save link: link already added", tgChatId);
             throw new LinkAlreadyAddedException(url);
         }
 
         LinkClient client = clientFactory.getClient(url);
         if (client == null) {
+            logger.info("user [{}] not save link: link is not supported", tgChatId);
             throw new LinkIsNotSupportedException(url);
         }
 
         LinkInformation linkInformation = client.fetchInformation(url);
         if (linkInformation == null) {
+            logger.info("user [{}] not save link: link is not supported", tgChatId);
             throw new LinkIsNotSupportedException(url);
         }
 
@@ -74,6 +82,7 @@ public class DefaultLinkService implements LinkService {
 
         var id = linkRepository.addChatByLink(tgChatId, link);
         chatRepository.addLinkByChat(tgChatId, link);
+
         return new LinkResponse(id, url, request.tags(), request.filters());
     }
 

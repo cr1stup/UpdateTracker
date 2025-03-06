@@ -7,11 +7,15 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class FilterStateHandler implements StateHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(FilterStateHandler.class);
 
     private final BotService botService;
     private final BotRepository botRepository;
@@ -42,6 +46,7 @@ public class FilterStateHandler implements StateHandler {
             return new SendMessage(chatId, "Не удалось сохранить ссылку: " + response.getErrorMessage());
         }
 
+        logger.info("user [{}] save link successfully", chatId);
         return new SendMessage(chatId, "Ваша ссылка успешно сохранена для отслеживания!");
     }
 }
