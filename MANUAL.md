@@ -2,22 +2,20 @@
 
 1. Склонируйте репозиторий
 
-
 2. Откройте проект и задайте значения переменных для токенов [telegram](https://docs.radist.online/radist.online-docs/nashi-produkty/radist-web/podklyucheniya/telegram-bot/instrukciya-po-sozdaniyu-i-nastroiki-bota-v-botfather) и [gitbub](https://www.geeksforgeeks.org/how-to-generate-personal-access-token-in-github/):
 
-    Run -> Edit Configuration -> Modify Options -> Enable Environment variables
+   Run -> Edit Configuration -> Modify Options -> Enable Environment variables
 
-    для BotApplication - TELEGRAM_TOKEN        
-    для ScrapperApplication - GITHUB_TOKEN
-
+   для BotApplication - TELEGRAM_TOKEN        
+   для ScrapperApplication - GITHUB_TOKEN
 
 3. Запустите ScrapperApplication
 
-
 4. Запустите BotApplication
 
-
 5. Проверьте отслеживания ссылок:
+
 - создайте публичный репозиторий на github с README.md файлом
 - отправьте в бот команду /track и следуйте его инструкциям, сохранив ссылку на ваш репозиторий
-- сделайте любой коммит в README.md и бот пришлет сообщение об обновлении в течение 10 секунд 
+- сделайте любой коммит в README.md и бот пришлет сообщение об обновлении в течение 10 секунд
+

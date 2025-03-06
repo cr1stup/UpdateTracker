@@ -25,7 +25,10 @@ public class MessageListener implements UpdatesListener {
     @Override
     public int process(List<Update> updates) {
         updates.forEach(update -> {
-            logger.info("User [{}] send message = {}", update.message().chat().id(), update.message().text());
+            logger.info(
+                    "User [{}] send message = {}",
+                    update.message().chat().id(),
+                    update.message().text());
             SendMessage sendMessage = commandProcessor.process(update);
             if (sendMessage != null) {
                 requestExecutor.execute(sendMessage
