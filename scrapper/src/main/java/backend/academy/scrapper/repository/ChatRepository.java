@@ -1,16 +1,21 @@
 package backend.academy.scrapper.repository;
 
-import java.util.HashSet;
+import backend.academy.scrapper.dto.Link;
+import java.net.URI;
 import java.util.Set;
 
-public class ChatRepository {
-    private static final Set<Long> chats = new HashSet<>();
+public interface ChatRepository {
+    void addChat(Long id);
 
-    public static void add(Long id) {
-        chats.add(id);
-    }
+    void deleteChat(Long id);
 
-    public static void delete(Long id) {
-        chats.remove(id);
-    }
+    void addLinkByChat(Long id, Link link);
+
+    void deleteLinkByChat(Long id, URI link);
+
+    Set<Link> getLinksByChat(Long id);
+
+    boolean isChatExist(Long id);
+
+    boolean isLinkByChatExist(Long id, URI link);
 }
