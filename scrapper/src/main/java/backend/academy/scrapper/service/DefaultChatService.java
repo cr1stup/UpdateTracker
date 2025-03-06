@@ -1,18 +1,30 @@
 package backend.academy.scrapper.service;
 
+import backend.academy.scrapper.exception.ChatAlreadyRegisteredException;
+import backend.academy.scrapper.exception.ChatNotFoundException;
 import backend.academy.scrapper.repository.ChatRepository;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
+@RequiredArgsConstructor
 public class DefaultChatService implements ChatService {
+
+    private final ChatRepository chatRepository;
 
     @Override
     public void registerChat(Long id) {
-        ChatRepository.add(id);
+        if (chatRepository.isChatExist(id)) {
+            throw new ChatAlreadyRegisteredException();
+        }
+        chatRepository.addChat(id);
     }
 
     @Override
     public void deleteChat(Long id) {
-        ChatRepository.delete(id);
+        if (!chatRepository.isChatExist(id)) {
+            throw new ChatNotFoundException();
+        }
+        chatRepository.deleteChat(id);
     }
 }
