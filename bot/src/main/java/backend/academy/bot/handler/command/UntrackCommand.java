@@ -1,15 +1,20 @@
 package backend.academy.bot.handler.command;
 
 import backend.academy.bot.handler.state.BotState;
-import backend.academy.bot.repository.BotStateRepository;
+import backend.academy.bot.repository.BotRepository;
 import backend.academy.bot.util.BotMessages;
 import com.pengrad.telegrambot.model.Update;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
 @Order(4)
+@RequiredArgsConstructor
 public class UntrackCommand implements Command {
+
+    private final BotRepository botRepository;
+
     @Override
     public String name() {
         return BotMessages.UNTRACK_NAME;
@@ -22,6 +27,6 @@ public class UntrackCommand implements Command {
 
     @Override
     public void setState(Update update) {
-        BotStateRepository.setState(update.message().chat().id() ,BotState.UNTRACK);
+        botRepository.setState(update.message().chat().id() ,BotState.UNTRACK);
     }
 }

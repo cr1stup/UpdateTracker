@@ -1,15 +1,19 @@
 package backend.academy.bot.handler.command;
 
 import backend.academy.bot.handler.state.BotState;
-import backend.academy.bot.repository.BotStateRepository;
+import backend.academy.bot.repository.BotRepository;
 import backend.academy.bot.util.BotMessages;
 import com.pengrad.telegrambot.model.Update;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
 @Order(5)
+@RequiredArgsConstructor
 public class ListCommand implements Command {
+
+    private final BotRepository botRepository;
 
     @Override
     public String name() {
@@ -23,6 +27,6 @@ public class ListCommand implements Command {
 
     @Override
     public void setState(Update update) {
-        BotStateRepository.setState(update.message().chat().id(), BotState.LIST);
+        botRepository.setState(update.message().chat().id(), BotState.LIST);
     }
 }
