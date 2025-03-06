@@ -9,6 +9,7 @@ import backend.academy.bot.dto.OptionalAnswer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.net.URI;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +23,8 @@ public class DefaultBotService implements BotService {
     }
 
     @Override
-    public OptionalAnswer<LinkResponse> linkUrlToUser(String url, Long userId) {
-        return scrapperClient.addLink(userId, new AddLinkRequest(URI.create(url)));
+    public OptionalAnswer<LinkResponse> linkUrlToUser(String url, Long userId, List<String> tags, List<String> filters) {
+        return scrapperClient.addLink(userId, new AddLinkRequest(URI.create(url), tags, filters));
     }
 
     @Override
