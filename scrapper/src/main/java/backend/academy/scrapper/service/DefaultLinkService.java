@@ -13,8 +13,12 @@ import backend.academy.scrapper.exception.LinkIsNotSupportedException;
 import backend.academy.scrapper.repository.ChatRepository;
 import backend.academy.scrapper.repository.LinkRepository;
 import java.net.URI;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,5 +83,42 @@ public class DefaultLinkService implements LinkService {
         chatRepository.deleteLinkByChat(tgChatId, url);
         Link link = linkRepository.removeChatByLink(tgChatId, url);
         return new LinkResponse(link.id(), URI.create(link.url()), link.tags(), link.filters());
+    }
+
+    @Override
+    public List<Link> getListLinkToCheck(Duration after) {
+        OffsetDateTime threshold = OffsetDateTime.now(ZoneId.systemDefault()).minus(after);
+        var links = linkRepository.getAllLinks();
+
+        return links.stream()
+            .filter(link -> link.lastCheckedAt().isBefore(threshold))
+            .sorted(Comparator.comparing(Link::lastCheckedAt))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Long> getListOfChatId(Link link) {
+        return linkRepository.getAllChatIdByLink(link).stream().toList();
+    }
+
+    @Override
+    public void update(String url, OffsetDateTime lastModified) {
+        var links = linkRepository.getAllLinks();
+        links.stream()
+            .filter(link -> url.equals(link.url()))
+            .findFirst()
+            .ifPresent(link -> {
+                link.lastCheckedAt(OffsetDateTime.now(ZoneId.systemDefault()));
+                link.updatedAt(lastModified);
+            });
+    }
+
+    @Override
+    public void checkNow(String url) {
+        var links = linkRepository.getAllLinks();
+        links.stream()
+            .filter(link -> url.equals(link.url()))
+            .findFirst()
+            .ifPresent(link -> link.lastCheckedAt(OffsetDateTime.now(ZoneId.systemDefault())));
     }
 }
