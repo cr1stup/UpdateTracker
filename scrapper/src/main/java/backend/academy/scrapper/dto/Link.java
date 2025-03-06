@@ -20,9 +20,14 @@ public class Link {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Link link = (Link) o;
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Link link)) {
+            return false;
+        }
+
         return Objects.equals(url, link.url);
     }
 
