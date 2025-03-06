@@ -1,5 +1,6 @@
 package backend.academy.bot.handler.state;
 
+import backend.academy.bot.repository.BotRepository;
 import backend.academy.bot.service.BotService;
 import backend.academy.bot.util.BotMessages;
 import backend.academy.bot.util.LinkUtil;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 public class UntrackStateHandler implements StateHandler {
 
     private final BotService botService;
+    private final BotRepository botRepository;
 
     @Override
     public BotState state() {
@@ -24,9 +26,10 @@ public class UntrackStateHandler implements StateHandler {
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
 
-        var listLinks = botService.getAllLinks(update.message().chat().id()).answer();
-        if (listLinks.links().isEmpty()) {
-            return new SendMessage(update.message().chat().id(), "Список отслеживаемых ссылок пуст");
+        var listLinks = botService.getAllLinks(chatId).answer();
+        if (listLinks.links() == null || listLinks.links().isEmpty()) {
+            botRepository.setState(chatId, BotState.START);
+            return new SendMessage(chatId, BotMessages.EMPTY_LIST);
         }
 
         String[] userText = update.message().text().split(" ");
@@ -39,6 +42,7 @@ public class UntrackStateHandler implements StateHandler {
         }
 
         var response = botService.unlinkUrlFromUser(URI.create(link), chatId);
+        botRepository.setState(chatId, BotState.START);
 
         if (response.isError()) {
             return new SendMessage(chatId, "Не удалось удалить ссылку: " + response.getErrorMessage());

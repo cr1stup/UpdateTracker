@@ -1,7 +1,8 @@
 package backend.academy.bot.handler.state;
 
-import backend.academy.bot.service.BotService;
+import backend.academy.bot.repository.BotRepository;
 import backend.academy.bot.util.BotMessages;
+import backend.academy.bot.util.ChatLimits;
 import backend.academy.bot.util.LinkUtil;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TrackStateHandler implements StateHandler {
 
-    private final BotService botService;
+    private final BotRepository botRepository;
+    private static final int MAX_TAGS = ChatLimits.MAX_TAGS;
+
 
     @Override
     public BotState state() {
@@ -31,12 +34,10 @@ public class TrackStateHandler implements StateHandler {
             return new SendMessage(chatId, "Введите корректную ссылку");
         }
 
-        var response = botService.linkUrlToUser(link, chatId);
+        botRepository.setLink(chatId, link);
+        botRepository.setState(chatId, BotState.TAG);
 
-        if (response.isError()) {
-            return new SendMessage(chatId, "Не удалось сохранить ссылку: " + response.getErrorMessage());
-        }
-
-        return new SendMessage(chatId, "Ваша сслыка успешно сохранена для отслеживания!");
+        return new SendMessage(chatId,
+            "Введите тэги (не больше %d) через пробел или \"null\", если хотите без них".formatted(MAX_TAGS));
     }
 }
