@@ -36,10 +36,10 @@ public class StackOverflowClient implements LinkClient {
             StackOverflowResponse.EMPTY
         );
 
-        if (info == null || info.items() == null || info.items().length == 0) {
+        if (info == null || info.items() == null || info.items().isEmpty()) {
             return null;
         }
 
-        return new LinkInformation(url, info.items()[0].title(), null, info.items()[0].lastModified());
+        return new LinkInformation(url, info.items().getFirst().title(), null, info.items().getFirst().lastModified());
     }
 }
