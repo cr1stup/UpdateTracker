@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class LinkTrackerBot implements AutoCloseable {
+public final class LinkTrackerBot implements AutoCloseable {
 
     private final TelegramBot telegramBot;
     private final RequestExecutor requestExecutor;
@@ -24,10 +24,12 @@ public class LinkTrackerBot implements AutoCloseable {
 
     @PostConstruct
     public void start() {
-        requestExecutor.execute(new SetMyCommands(commandProcessor.commands().stream()
-                .map(Command::toApiCommand)
-                .toList()
-                .toArray(new BotCommand[0])));
+        var commands = new SetMyCommands(commandProcessor.commands().stream()
+            .map(Command::toApiCommand)
+            .toList()
+            .toArray(new BotCommand[0]));
+
+        requestExecutor.execute(commands);
 
         telegramBot.setUpdatesListener(messageListener);
         log.info("Launching Telegram bot");
