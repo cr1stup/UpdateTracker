@@ -9,15 +9,13 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class MessageListener implements UpdatesListener {
-
-    private static final Logger logger = LoggerFactory.getLogger(MessageListener.class);
 
     private final RequestExecutor requestExecutor;
     private final CommandProcessor commandProcessor;
@@ -25,7 +23,7 @@ public class MessageListener implements UpdatesListener {
     @Override
     public int process(List<Update> updates) {
         updates.forEach(update -> {
-            logger.info(
+            log.info(
                     "User [{}] send message = {}",
                     update.message().chat().id(),
                     update.message().text());

@@ -9,15 +9,13 @@ import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class LinkTrackerBot implements AutoCloseable {
-
-    private static final Logger logger = LoggerFactory.getLogger(LinkTrackerBot.class);
 
     private final TelegramBot telegramBot;
     private final RequestExecutor requestExecutor;
@@ -32,12 +30,12 @@ public class LinkTrackerBot implements AutoCloseable {
                 .toArray(new BotCommand[0])));
 
         telegramBot.setUpdatesListener(messageListener);
-        logger.info("Launching Telegram bot");
+        log.info("Launching Telegram bot");
     }
 
     @Override
     public void close() {
         telegramBot.shutdown();
-        logger.info("Closing Telegram Bot");
+        log.info("Closing Telegram Bot");
     }
 }

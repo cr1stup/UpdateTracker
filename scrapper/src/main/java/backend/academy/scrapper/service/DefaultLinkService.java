@@ -20,16 +20,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DefaultLinkService implements LinkService {
-
-    private static final Logger logger = LoggerFactory.getLogger(DefaultLinkService.class);
 
     private final ChatRepository chatRepository;
     private final LinkRepository linkRepository;
@@ -50,25 +48,25 @@ public class DefaultLinkService implements LinkService {
     @Transactional
     public LinkResponse addLink(AddLinkRequest request, Long tgChatId) {
         if (!chatRepository.isChatExist(tgChatId)) {
-            logger.info("user [{}] not save link: chat not found", tgChatId);
+            log.info("user [{}] not save link: chat not found", tgChatId);
             throw new ChatNotFoundException();
         }
 
         URI url = request.link();
         if (chatRepository.isLinkByChatExist(tgChatId, url)) {
-            logger.info("user [{}] not save link: link already added", tgChatId);
+            log.info("user [{}] not save link: link already added", tgChatId);
             throw new LinkAlreadyAddedException(url);
         }
 
         LinkClient client = clientFactory.getClient(url);
         if (client == null) {
-            logger.info("user [{}] not save link: link is not supported", tgChatId);
+            log.info("user [{}] not save link: link is not supported", tgChatId);
             throw new LinkIsNotSupportedException(url);
         }
 
         LinkInformation linkInformation = client.fetchInformation(url);
         if (linkInformation == null) {
-            logger.info("user [{}] not save link: link is not supported", tgChatId);
+            log.info("user [{}] not save link: link is not supported", tgChatId);
             throw new LinkIsNotSupportedException(url);
         }
 

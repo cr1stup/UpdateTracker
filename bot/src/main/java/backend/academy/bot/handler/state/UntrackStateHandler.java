@@ -8,15 +8,13 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class UntrackStateHandler implements StateHandler {
-
-    private static final Logger logger = LoggerFactory.getLogger(UntrackStateHandler.class);
 
     private final BotService botService;
     private final BotRepository botRepository;
@@ -33,7 +31,7 @@ public class UntrackStateHandler implements StateHandler {
         var listLinks = botService.getAllLinks(chatId).answer();
         if (listLinks.links() == null || listLinks.links().isEmpty()) {
             botRepository.setState(chatId, BotState.START);
-            logger.info("user [{}] list is empty", chatId);
+            log.info("user [{}] list is empty", chatId);
             return new SendMessage(chatId, BotMessages.EMPTY_LIST);
         }
 
@@ -53,7 +51,7 @@ public class UntrackStateHandler implements StateHandler {
             return new SendMessage(chatId, "Не удалось удалить ссылку: " + response.getErrorMessage());
         }
 
-        logger.info("user [{}] remove link successfully", chatId);
+        log.info("user [{}] remove link successfully", chatId);
         return new SendMessage(chatId, "Ваша сслыка успешно удалена из отслеживаемых!");
     }
 }
