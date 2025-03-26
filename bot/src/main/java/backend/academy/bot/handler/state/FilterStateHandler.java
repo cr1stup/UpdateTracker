@@ -31,7 +31,9 @@ public class FilterStateHandler implements StateHandler {
 
         if (userText.length > MAX_FILTERS) {
             return new SendMessage(chatId, "Введите меньше %d фильтров".formatted(MAX_FILTERS));
-        } else if (!"null".equalsIgnoreCase(userText[0])) {
+        }
+
+        if (!"null".equalsIgnoreCase(userText[0])) {
             botRepository.setFilters(chatId, Arrays.asList(userText));
         }
 
