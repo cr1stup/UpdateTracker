@@ -46,16 +46,23 @@ class AddAndRemoveLinkTest {
     private static final List<String> FILTERS = List.of("filter1");
 
     @Test
-    @DisplayName("happy path adding and removing link")
-    void testAddAndRemoveLinkSuccess() {
+    @DisplayName("happy path adding link")
+    void testAddLinkSuccess() {
         mockAddLinkBehavior();
+
+        LinkResponse response = linkService.addLink(createAddRequest(), TG_CHAT_ID);
+
+        assertAddResponse(response);
+    }
+
+    @Test
+    @DisplayName("happy path removing link")
+    void testRemoveLinkSuccess() {
         mockRemoveLinkBehavior();
 
-        LinkResponse addResponse = linkService.addLink(createAddRequest(), TG_CHAT_ID);
-        LinkResponse removeResponse = linkService.removeLink(URL, TG_CHAT_ID);
+        LinkResponse response = linkService.removeLink(URL, TG_CHAT_ID);
 
-        assertAddResponse(addResponse);
-        assertRemoveResponse(removeResponse);
+        assertRemoveResponse(response);
     }
 
     private void assertAddResponse(LinkResponse response) {
