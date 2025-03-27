@@ -46,8 +46,9 @@ public class LinkUpdateScheduler {
             log.info("Send update to users");
             botClient.handleUpdates(new LinkUpdate(
                     link.id(), URI.create(link.url()), linkInformation.title(), linkService.getListOfChatId(link)));
-        } else {
-            linkService.checkNow(link.url());
+            return;
         }
+
+        linkService.checkNow(link.url());
     }
 }
