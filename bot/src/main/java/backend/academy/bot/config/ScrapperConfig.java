@@ -1,7 +1,8 @@
 package backend.academy.bot.config;
 
 import backend.academy.bot.client.ScrapperClient;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -10,17 +11,18 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 import reactor.core.publisher.Mono;
 
 @Configuration
+@EnableConfigurationProperties(ScrapperProperties.class)
+@RequiredArgsConstructor
 public class ScrapperConfig {
 
-    @Value("${scrapper.url}")
-    private String scrapperUrl;
+    private final ScrapperProperties properties;
 
     @Bean
     public WebClient webClient(WebClient.Builder webClientBuilder) {
         return webClientBuilder
                 .defaultStatusHandler(httpStatusCode -> true, clientResponse -> Mono.empty())
                 .defaultHeader("Content-Type", "application/json")
-                .baseUrl(scrapperUrl)
+                .baseUrl(properties.url())
                 .build();
     }
 
