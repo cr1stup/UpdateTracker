@@ -36,9 +36,9 @@ public class BotClientTest {
                         .withBody(objectMapper.writeValueAsString(
                                 new ApiErrorResponse("Not found", "404", "Not found", "Not found", List.of())))
                         .withHeader("Content-Type", "application/json")));
-        BotClient scrapperClient = botClient();
+        BotClient botClient = botClient();
 
-        ApiErrorResponse response = scrapperClient
+        ApiErrorResponse response = botClient
                 .handleUpdates(new LinkUpdate(100L, URI.create("https://example.com.com"), "description", List.of()))
                 .apiErrorResponse();
 

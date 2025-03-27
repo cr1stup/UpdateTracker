@@ -1,6 +1,5 @@
 package backend.academy.scrapper.scheduler;
 
-import backend.academy.scrapper.client.bot.BotClient;
 import backend.academy.scrapper.client.link.ClientFactory;
 import backend.academy.scrapper.client.link.LinkClient;
 import backend.academy.scrapper.config.ScrapperConfig;
@@ -8,6 +7,7 @@ import backend.academy.scrapper.dto.Link;
 import backend.academy.scrapper.dto.LinkInformation;
 import backend.academy.scrapper.dto.LinkUpdate;
 import backend.academy.scrapper.service.LinkService;
+import backend.academy.scrapper.service.UpdateService;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class LinkUpdateScheduler {
     private final LinkService linkService;
     private final ScrapperConfig scrapperConfig;
     private final ClientFactory clientFactory;
-    private final BotClient botClient;
+    private final UpdateService updateService;
 
     @Scheduled(fixedDelayString = "#{@'app-backend.academy.scrapper.config.ScrapperConfig'.scheduler.interval}")
     public void update() {
@@ -44,8 +44,8 @@ public class LinkUpdateScheduler {
             linkService.update(link.url(), linkInformation.lastModified());
             log.info("Update on link {}", link.url());
             log.info("Send update to users");
-            botClient.handleUpdates(new LinkUpdate(
-                    link.id(), URI.create(link.url()), linkInformation.title(), linkService.getListOfChatId(link)));
+            updateService.sendUpdatesToUsers(new LinkUpdate(
+                link.id(), URI.create(link.url()), linkInformation.title(), linkService.getListOfChatId(link)));
             return;
         }
 

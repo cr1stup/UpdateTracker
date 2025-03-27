@@ -1,18 +1,12 @@
 package backend.academy.scrapper.scheduler;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import backend.academy.scrapper.client.bot.BotClient;
 import backend.academy.scrapper.client.link.ClientFactory;
 import backend.academy.scrapper.client.link.LinkClient;
 import backend.academy.scrapper.config.ScrapperConfig;
 import backend.academy.scrapper.dto.Link;
 import backend.academy.scrapper.dto.LinkInformation;
 import backend.academy.scrapper.service.DefaultLinkService;
+import backend.academy.scrapper.service.DefaultUpdateService;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -23,6 +17,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class LinkUpdateSchedulerTest {
@@ -37,7 +36,7 @@ class LinkUpdateSchedulerTest {
     private ClientFactory clientFactory;
 
     @Mock
-    private BotClient botClient;
+    private DefaultUpdateService updateService;
 
     @InjectMocks
     private LinkUpdateScheduler linkUpdateScheduler;
@@ -61,8 +60,8 @@ class LinkUpdateSchedulerTest {
     }
 
     private void verifyBotClientUpdates(Link link, List<Long> chatIds) {
-        verify(botClient)
-                .handleUpdates(argThat(update -> update.id().equals(link.id())
+        verify(updateService)
+                .sendUpdatesToUsers(argThat(update -> update.id().equals(link.id())
                         && update.url().equals(URI.create(link.url()))
                         && chatIds.equals(update.tgChatIds())));
     }
