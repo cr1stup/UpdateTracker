@@ -42,22 +42,10 @@ class LinkUpdateSchedulerTest {
     @InjectMocks
     private LinkUpdateScheduler linkUpdateScheduler;
 
-    private static final Link LINK_1 = new Link(
-            1L,
-            "https://github.com/example/repo1",
-            List.of("tag1"),
-            List.of("filter1"),
-            OffsetDateTime.now(),
-            OffsetDateTime.now().minusMinutes(20));
-    private static final Link LINK_2 = new Link(
-            2L,
-            "https://github.com/example/repo2",
-            List.of("tag2"),
-            List.of("filter2"),
-            OffsetDateTime.now(),
-            OffsetDateTime.now().minusMinutes(40));
-    private static final List<Long> CHAT_IDS_1 = List.of(101L, 102L);
-    private static final List<Long> CHAT_IDS_2 = List.of(103L);
+    private static final Link LINK_1 = LinkFixtures.getLink1();
+    private static final Link LINK_2 = LinkFixtures.getLink2();
+    private static final List<Long> CHAT_IDS_1 = LinkFixtures.getChatIds1();
+    private static final List<Long> CHAT_IDS_2 = LinkFixtures.getChatIds2();
 
     @Test
     @DisplayName("send updates only to tracked users")
