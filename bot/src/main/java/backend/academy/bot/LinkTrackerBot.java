@@ -25,9 +25,9 @@ public final class LinkTrackerBot implements AutoCloseable {
     @PostConstruct
     public void start() {
         var commands = new SetMyCommands(commandProcessor.commands().stream()
-            .map(Command::toApiCommand)
-            .toList()
-            .toArray(new BotCommand[0]));
+                .map(Command::toApiCommand)
+                .toList()
+                .toArray(new BotCommand[0]));
 
         requestExecutor.execute(commands);
 

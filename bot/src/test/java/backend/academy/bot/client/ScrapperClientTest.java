@@ -42,8 +42,8 @@ public class ScrapperClientTest {
         ListLinksResponse response = scrapperClient.listLinks(100L).answer();
 
         Assertions.assertThat(response)
-            .extracting(ListLinksResponse::links)
-            .isEqualTo(List.of(new LinkResponse(100L, URI.create("https://test.com"), null, null)));
+                .extracting(ListLinksResponse::links)
+                .isEqualTo(List.of(new LinkResponse(100L, URI.create("https://test.com"), null, null)));
     }
 
     @SneakyThrows
@@ -53,12 +53,13 @@ public class ScrapperClientTest {
         WireMockStubUtil.mockAddLinkSuccess();
         ScrapperClient scrapperClient = scrapperClient();
 
-        LinkResponse response = scrapperClient.addLink(100L,
-            new AddLinkRequest(URI.create("https://test.com"), null, null)).answer();
+        LinkResponse response = scrapperClient
+                .addLink(100L, new AddLinkRequest(URI.create("https://test.com"), null, null))
+                .answer();
 
         Assertions.assertThat(response)
-            .extracting(LinkResponse::id, LinkResponse::url)
-            .contains(100L, URI.create("https://test.com"));
+                .extracting(LinkResponse::id, LinkResponse::url)
+                .contains(100L, URI.create("https://test.com"));
     }
 
     @SneakyThrows
@@ -68,23 +69,24 @@ public class ScrapperClientTest {
         WireMockStubUtil.mockRemoveLinkSuccess();
         ScrapperClient scrapperClient = scrapperClient();
 
-        LinkResponse response =
-            scrapperClient.removeLink(100L, new RemoveLinkRequest(URI.create("https://test.com"))).answer();
+        LinkResponse response = scrapperClient
+                .removeLink(100L, new RemoveLinkRequest(URI.create("https://test.com")))
+                .answer();
 
         Assertions.assertThat(response)
-            .extracting(LinkResponse::id, LinkResponse::url)
-            .contains(100L, URI.create("https://test.com"));
+                .extracting(LinkResponse::id, LinkResponse::url)
+                .contains(100L, URI.create("https://test.com"));
     }
 
     private static ScrapperClient scrapperClient() {
         WebClient webClient = WebClient.builder()
-            .defaultStatusHandler(httpStatusCode -> true, clientResponse -> Mono.empty())
-            .baseUrl("http://localhost:9090")
-            .build();
+                .defaultStatusHandler(httpStatusCode -> true, clientResponse -> Mono.empty())
+                .baseUrl("http://localhost:9090")
+                .build();
 
         HttpServiceProxyFactory httpServiceProxyFactory = HttpServiceProxyFactory.builderFor(
-                WebClientAdapter.create(webClient))
-            .build();
+                        WebClientAdapter.create(webClient))
+                .build();
 
         return httpServiceProxyFactory.createClient(ScrapperClient.class);
     }

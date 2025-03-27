@@ -8,7 +8,7 @@ public interface BotMessages {
     String START_HANDLE =
             """
         Добро пожаловать в бот для отслеживания обновлений по ссылкам!
-        Введите /help для просмортра доступных команд
+        Введите /help для просмотра доступных команд
         """;
 
     String HELP_NAME = "/help";
