@@ -1,7 +1,8 @@
 package backend.academy.scrapper.config;
 
 import backend.academy.scrapper.client.bot.BotClient;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -12,17 +13,18 @@ import reactor.core.publisher.Mono;
 
 @Configuration
 @EnableScheduling
+@EnableConfigurationProperties(ClientProperties.class)
+@RequiredArgsConstructor
 public class ClientConfig {
 
-    @Value("${bot.url}")
-    private String botUrl;
+    private final ClientProperties properties;
 
     @Bean
     public WebClient webClient(WebClient.Builder webClientBuilder) {
         return webClientBuilder
                 .defaultStatusHandler(httpStatusCode -> true, clientResponse -> Mono.empty())
                 .defaultHeader("Content-Type", "application/json")
-                .baseUrl(botUrl)
+                .baseUrl(properties.url())
                 .build();
     }
 
