@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 
 import backend.academy.scrapper.dto.AddLinkRequest;
 import backend.academy.scrapper.exception.LinkAlreadyAddedException;
-import backend.academy.scrapper.repository.DefaultChatRepository;
+import backend.academy.scrapper.repository.memory.DefaultChatRepository;
 import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;

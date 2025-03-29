@@ -1,4 +1,4 @@
-package backend.academy.scrapper.repository;
+package backend.academy.scrapper.repository.memory;
 
 import backend.academy.scrapper.dto.Link;
 import backend.academy.scrapper.exception.LinkNotFoundException;
