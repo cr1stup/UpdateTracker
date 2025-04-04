@@ -4,10 +4,10 @@ import java.net.URI;
 import org.springframework.http.HttpStatus;
 
 public class LinkNotFoundException extends ScrapperException {
-    public LinkNotFoundException(URI link) {
+    public LinkNotFoundException() {
         super(
                 "Ссылка отсутствует",
-                "ссылка %s не добавлена для отслеживания".formatted(link.toString()),
+                "данная ссылка не добавлена для отслеживания",
                 HttpStatus.BAD_REQUEST);
     }
 }

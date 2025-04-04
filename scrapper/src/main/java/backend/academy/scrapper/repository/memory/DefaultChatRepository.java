@@ -32,7 +32,7 @@ public class DefaultChatRepository implements ChatRepository {
     @Override
     public void deleteLinkByChat(Long id, URI url) {
         if (!isLinkByChatExist(id, url)) {
-            throw new LinkNotFoundException(url);
+            throw new LinkNotFoundException();
         }
         chatLinks.get(id).removeIf(link -> link.url().equals(url.toString()));
     }
