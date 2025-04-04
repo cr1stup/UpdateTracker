@@ -4,6 +4,7 @@ app:
     interval: 10s
     force-check-delay: 10s
     batch-size: 100
+    thread-count: 4
   github-token: ${GITHUB_TOKEN} # env variable
   stackoverflow:
     key: ${SO_TOKEN_KEY}

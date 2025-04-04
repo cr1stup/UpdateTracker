@@ -12,7 +12,7 @@ public record ScrapperConfig(
         @NotNull Scheduler scheduler, @NotEmpty String githubToken, StackOverflowCredentials stackOverflow, AccessType databaseAccessType) {
     public record StackOverflowCredentials(@NotEmpty String key, @NotEmpty String accessToken) {}
 
-    public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay, int batchSize) {}
+    public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay, int batchSize, int threadCount) {}
 
     public enum AccessType {
         JDBC, JPA
