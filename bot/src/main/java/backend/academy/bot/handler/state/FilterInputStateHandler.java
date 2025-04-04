@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class FilterStateHandler implements StateHandler {
+public class FilterInputStateHandler implements StateHandler {
 
     private final BotService botService;
     private final BotRepository botRepository;
@@ -21,7 +21,7 @@ public class FilterStateHandler implements StateHandler {
 
     @Override
     public BotState state() {
-        return BotState.FILTER;
+        return BotState.FILTER_INPUT;
     }
 
     @Override

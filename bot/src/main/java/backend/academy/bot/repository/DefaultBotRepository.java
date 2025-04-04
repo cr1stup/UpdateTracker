@@ -14,7 +14,7 @@ public class DefaultBotRepository implements BotRepository {
 
     @Override
     public void setState(Long id, BotState state) {
-        if (state != BotState.TAG && state != BotState.FILTER) {
+        if (state != BotState.TAG_INPUT && state != BotState.FILTER_INPUT) {
             botParams.put(id, new Params().botState(state));
         } else {
             botParams.get(id).botState(state);

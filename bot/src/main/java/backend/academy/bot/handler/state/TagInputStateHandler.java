@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class TagStateHandler implements StateHandler {
+public class TagInputStateHandler implements StateHandler {
 
     private final BotRepository botRepository;
     private static final int MAX_TAGS = ChatLimits.MAX_TAGS;
@@ -18,7 +18,7 @@ public class TagStateHandler implements StateHandler {
 
     @Override
     public BotState state() {
-        return BotState.TAG;
+        return BotState.TAG_INPUT;
     }
 
     @Override
@@ -28,11 +28,13 @@ public class TagStateHandler implements StateHandler {
 
         if (userText.length > MAX_TAGS) {
             return new SendMessage(chatId, "Введите меньше %d тегов".formatted(MAX_TAGS));
-        } else if (!"null".equalsIgnoreCase(userText[0])) {
+        }
+
+        if (!"null".equalsIgnoreCase(userText[0])) {
             botRepository.setTags(chatId, Arrays.asList(userText));
         }
 
-        botRepository.setState(chatId, BotState.FILTER);
+        botRepository.setState(chatId, BotState.FILTER_INPUT);
         return new SendMessage(
                 chatId,
                 "Введите фильтры (не больше %d) через пробел или \"null\", если хотите без них".formatted(MAX_FILTERS));

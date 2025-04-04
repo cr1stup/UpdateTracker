@@ -34,7 +34,7 @@ public class TrackStateHandler implements StateHandler {
         }
 
         botRepository.setLink(chatId, link);
-        botRepository.setState(chatId, BotState.TAG);
+        botRepository.setState(chatId, BotState.TAG_INPUT);
 
         return new SendMessage(
                 chatId,
