@@ -1,4 +1,4 @@
-package backend.academy.scrapper.client.link.stackoverflow;
+package backend.academy.scrapper.client.link.stackoverflow.dto;
 
 import java.util.List;
 
