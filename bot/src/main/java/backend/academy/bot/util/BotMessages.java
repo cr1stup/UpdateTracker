@@ -23,6 +23,10 @@ public interface BotMessages {
     String LIST_NAME = "/list";
     String LIST_DESCRIPTION = "вывести список отслеживаемых ссылок";
 
+    String TAGLIST_NAME = "/tag";
+    String TAGLIST_DESCRIPTION = "просмотр тэгов и ссылок по тэгам";
+    String TAGLIST_GREATING = "Введите [all] для просмотра всех тэгов или конктретный тэг для просмотра всех привязванных ссылок";
+
     String EMPTY_LIST = "список отслеживаемых ссылок пуст";
 
     String UPDATE_MESSAGE = "Обновление по вашей ссылке";
