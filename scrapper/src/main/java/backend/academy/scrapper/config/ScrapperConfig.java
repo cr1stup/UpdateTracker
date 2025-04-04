@@ -9,8 +9,12 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ScrapperConfig(
-        @NotNull Scheduler scheduler, @NotEmpty String githubToken, StackOverflowCredentials stackOverflow) {
+        @NotNull Scheduler scheduler, @NotEmpty String githubToken, StackOverflowCredentials stackOverflow, AccessType databaseAccessType) {
     public record StackOverflowCredentials(@NotEmpty String key, @NotEmpty String accessToken) {}
 
-    public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {}
+    public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay, int batchSize) {}
+
+    public enum AccessType {
+        JDBC, JPA
+    }
 }
