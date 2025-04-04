@@ -3,10 +3,12 @@ app:
     enable: true
     interval: 10s
     force-check-delay: 10s
+    batch-size: 100
   github-token: ${GITHUB_TOKEN} # env variable
   stackoverflow:
     key: ${SO_TOKEN_KEY}
     access-token: ${SO_ACCESS_TOKEN}
+  database-access-type: jpa
 
 bot:
   url: http://localhost:8080
@@ -26,6 +28,10 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/scrapper
 
 server:
   port: 8081
