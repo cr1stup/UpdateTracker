@@ -6,6 +6,7 @@ import backend.academy.scrapper.config.ScrapperConfig;
 import backend.academy.scrapper.dto.Link;
 import backend.academy.scrapper.dto.LinkInformation;
 import backend.academy.scrapper.dto.LinkUpdate;
+import backend.academy.scrapper.dto.LinkUpdateEvent;
 import backend.academy.scrapper.service.LinkService;
 import backend.academy.scrapper.service.UpdateService;
 import java.net.URI;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class LinkUpdateScheduler {
 
     private final LinkService linkService;
-    private final ScrapperConfig scrapperConfig;
+    private final ScrapperConfig config;
     private final ClientFactory clientFactory;
     private final UpdateService updateService;
 
@@ -28,9 +29,9 @@ public class LinkUpdateScheduler {
     public void update() {
         log.info("Links update started");
         linkService
-                .getListLinkToCheck(scrapperConfig.scheduler().forceCheckDelay())
+                .getListLinkToCheck(config.scheduler().forceCheckDelay(), config.scheduler().batchSize())
                 .forEach(link -> {
-                    log.info("Updating link {}", link.url());
+                    log.info("Updating link {} with id {}", link.url(), link.id());
                     URI url = URI.create(link.url());
                     LinkClient client = clientFactory.getClient(url);
                     LinkInformation linkInformation = client.fetchInformation(url);
@@ -40,15 +41,16 @@ public class LinkUpdateScheduler {
     }
 
     private void processLinkInformation(LinkInformation linkInformation, Link link) {
-        if (linkInformation.lastModified().isAfter(link.updatedAt())) {
-            linkService.update(link.url(), linkInformation.lastModified());
-            log.info("Update on link {}", link.url());
-            log.info("Send update to users");
-            updateService.sendUpdatesToUsers(new LinkUpdate(
-                link.id(), URI.create(link.url()), linkInformation.title(), linkService.getListOfChatId(link)));
-            return;
+        for (LinkUpdateEvent event : linkInformation.events()) {
+            if (event.lastModified().isAfter(link.updatedAt())) {
+                linkService.update(link.id(), event.lastModified());
+                log.info("Update on link {}", link.url());
+                log.info("Send update to users");
+                updateService.sendUpdatesToUsers(new LinkUpdate(
+                    link.id(), URI.create(link.url()), event.information(), linkService.getListOfChatId(link.id())));
+            } else {
+                linkService.checkNow(link.id());
+            }
         }
-
-        linkService.checkNow(link.url());
     }
 }
