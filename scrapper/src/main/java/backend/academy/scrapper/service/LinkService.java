@@ -11,17 +11,17 @@ import java.util.List;
 
 public interface LinkService {
 
-    ListLinksResponse getListLinks(Long tgChatId);
+    ListLinksResponse getListLinks(Long chatId);
 
-    LinkResponse addLink(AddLinkRequest request, Long tgChatId);
+    LinkResponse addLink(AddLinkRequest request, Long chatId);
 
-    LinkResponse removeLink(URI link, Long tgChatId);
+    LinkResponse removeLink(URI link, Long chatId);
 
-    List<Link> getListLinkToCheck(Duration after);
+    List<Link> getListLinkToCheck(Duration after, int limit);
 
-    List<Long> getListOfChatId(Link link);
+    List<Long> getListOfChatId(Long linkId);
 
-    void update(String url, OffsetDateTime lastModified);
+    void update(Long linkId, OffsetDateTime lastModified);
 
-    void checkNow(String url);
+    void checkNow(Long linkId);
 }
