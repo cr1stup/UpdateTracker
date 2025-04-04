@@ -31,12 +31,13 @@ public class DefaultLinkNotificationService implements LinkNotificationService {
 
                 requestExecutor.execute(new SendMessage(
                                 chatId,
-                                "%s: %s %ntags: %s %nfilters: %s"
+                                "%s: %s %ntags: %s %nfilters: %s%ninfo: %s"
                                         .formatted(
                                                 BotMessages.UPDATE_MESSAGE,
                                                 link.url(),
                                                 userLink.tags(),
-                                                userLink.filters()))
+                                                userLink.filters(),
+                                                link.description()))
                         .linkPreviewOptions(new LinkPreviewOptions().isDisabled(true)));
 
             } catch (RuntimeException e) {
