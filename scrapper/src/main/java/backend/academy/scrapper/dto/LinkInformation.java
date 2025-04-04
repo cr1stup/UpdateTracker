@@ -1,6 +1,6 @@
 package backend.academy.scrapper.dto;
 
 import java.net.URI;
-import java.time.OffsetDateTime;
+import java.util.List;
 
-public record LinkInformation(URI url, String title, String description, OffsetDateTime lastModified) {}
+public record LinkInformation(URI url, String title, List<LinkUpdateEvent> events) {}
