@@ -63,7 +63,7 @@ public class GithubClient implements LinkClient {
         return new LinkInformation(url, profileInfo.fullName(), events);
     }
 
-    private String createMetaInformation(GithubResponse response) {
+    public String createMetaInformation(GithubResponse response) {
         StringBuilder metaInformation = new StringBuilder();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
@@ -73,11 +73,10 @@ public class GithubClient implements LinkClient {
             .append("  • User: ").append(response.user() != null ? response.user().login() : "N/A").append("%n")
             .append("  • Title: ").append(response.title() != null ? response.title() : "N/A").append("%n")
             .append("  • Created at: ").append(formattedTime).append("%n")
-            .append("  • Body: ").append(response.body() != null ?
+            .append("  • Body: ").append(response.body() == null || response.body().isEmpty() ? "No description" :
                 response.body().length() > 200 ?
                     response.body().substring(0, 200) + "..." :
-                    response.body()
-                : "No description")
+                    response.body())
             .append("%n");
 
         return metaInformation.toString().formatted();
