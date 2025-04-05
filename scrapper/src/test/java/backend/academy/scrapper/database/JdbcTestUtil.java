@@ -3,6 +3,7 @@ package backend.academy.scrapper.database;
 import backend.academy.scrapper.dto.Link;
 import backend.academy.scrapper.repository.jdbc.JdbcChatLinkRepository;
 import backend.academy.scrapper.repository.jdbc.JdbcChatRepository;
+import backend.academy.scrapper.repository.jdbc.JdbcFilterRepository;
 import backend.academy.scrapper.repository.jdbc.JdbcLinkRepository;
 import backend.academy.scrapper.repository.jdbc.JdbcTagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class JdbcTestUtil extends IntegrationEnvironment {
 
     @Autowired
     protected JdbcTagRepository tagRepository;
+
+    @Autowired
+    protected JdbcFilterRepository filterRepository;
 
     protected Long addLink() {
         var link = Link.create("test.com", "test", OffsetDateTime.MIN, OffsetDateTime.MAX);
