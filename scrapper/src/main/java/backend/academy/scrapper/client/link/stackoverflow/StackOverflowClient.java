@@ -77,7 +77,7 @@ public class StackOverflowClient implements LinkClient {
         return new LinkInformation(url, questionInfo.items().getFirst().title(), events);
     }
 
-    private String createMetaInformation(QuestionItem item, String title) {
+    public String createMetaInformation(QuestionItem item, String title) {
         StringBuilder metaInformation = new StringBuilder();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
