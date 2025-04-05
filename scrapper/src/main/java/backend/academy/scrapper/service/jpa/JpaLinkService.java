@@ -103,23 +103,23 @@ public class JpaLinkService implements LinkService {
 
         if (request.tags() != null) {
             Set<TagEntity> tags = request.tags().stream()
-                .map(tagName -> tagRepository.findByName(tagName).orElseGet(() -> {
-                    TagEntity newTag = new TagEntity();
-                    newTag.name(tagName);
-                    return tagRepository.save(newTag);
-                }))
-                .collect(Collectors.toSet());
+                    .map(tagName -> tagRepository.findByName(tagName).orElseGet(() -> {
+                        TagEntity newTag = new TagEntity();
+                        newTag.name(tagName);
+                        return tagRepository.save(newTag);
+                    }))
+                    .collect(Collectors.toSet());
             chatLink.tags(tags);
         }
 
         if (request.filters() != null) {
             Set<FilterEntity> filters = request.filters().stream()
-                .map(filterName -> filterRepository.findByName(filterName).orElseGet(() -> {
-                    FilterEntity newFilter = new FilterEntity();
-                    newFilter.name(filterName);
-                    return filterRepository.save(newFilter);
-                }))
-                .collect(Collectors.toSet());
+                    .map(filterName -> filterRepository.findByName(filterName).orElseGet(() -> {
+                        FilterEntity newFilter = new FilterEntity();
+                        newFilter.name(filterName);
+                        return filterRepository.save(newFilter);
+                    }))
+                    .collect(Collectors.toSet());
             chatLink.filters(filters);
         }
 
