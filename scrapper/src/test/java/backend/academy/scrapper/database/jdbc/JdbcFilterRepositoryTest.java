@@ -1,13 +1,13 @@
 package backend.academy.scrapper.database.jdbc;
 
 import backend.academy.scrapper.database.JdbcTestUtil;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @SpringBootTest
 public class JdbcFilterRepositoryTest extends JdbcTestUtil {

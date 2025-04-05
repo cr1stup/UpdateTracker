@@ -26,43 +26,39 @@ public class DatabaseConfig {
 
     @Bean
     @ConditionalOnProperty(name = "app.database-access-type", havingValue = "jdbc")
-    public ChatService jdbcChatService(
-        JdbcChatRepository chatRepository
-    ) {
+    public ChatService jdbcChatService(JdbcChatRepository chatRepository) {
         return new JdbcChatService(chatRepository);
     }
 
     @Bean
     @ConditionalOnProperty(name = "app.database-access-type", havingValue = "jdbc")
     public LinkService jdbcLinkService(
-        ClientFactory clientFactory,
-        JdbcChatLinkRepository chatLinkRepository,
-        JdbcChatRepository chatRepository,
-        JdbcLinkRepository linkRepository,
-        JdbcTagRepository tagRepository,
-        JdbcFilterRepository filterRepository
-    ) {
-        return new JdbcLinkService(clientFactory, chatLinkRepository, chatRepository, linkRepository, tagRepository, filterRepository);
+            ClientFactory clientFactory,
+            JdbcChatLinkRepository chatLinkRepository,
+            JdbcChatRepository chatRepository,
+            JdbcLinkRepository linkRepository,
+            JdbcTagRepository tagRepository,
+            JdbcFilterRepository filterRepository) {
+        return new JdbcLinkService(
+                clientFactory, chatLinkRepository, chatRepository, linkRepository, tagRepository, filterRepository);
     }
 
     @Bean
     @ConditionalOnProperty(name = "app.database-access-type", havingValue = "jpa")
-    public ChatService jpaChatService(
-        JpaChatRepository jpaChatRepository
-    ) {
+    public ChatService jpaChatService(JpaChatRepository jpaChatRepository) {
         return new JpaChatService(jpaChatRepository);
     }
 
     @Bean
     @ConditionalOnProperty(name = "app.database-access-type", havingValue = "jpa")
     public LinkService jpaLinkService(
-        ClientFactory clientFactory,
-        JpaChatLinkRepository chatLinkRepository,
-        JpaChatRepository chatRepository,
-        JpaLinkRepository linkRepository,
-        JpaTagRepository tagRepository,
-        JpaFilterRepository filterRepository
-    ) {
-        return new JpaLinkService(clientFactory, chatLinkRepository, chatRepository, linkRepository, tagRepository, filterRepository);
+            ClientFactory clientFactory,
+            JpaChatLinkRepository chatLinkRepository,
+            JpaChatRepository chatRepository,
+            JpaLinkRepository linkRepository,
+            JpaTagRepository tagRepository,
+            JpaFilterRepository filterRepository) {
+        return new JpaLinkService(
+                clientFactory, chatLinkRepository, chatRepository, linkRepository, tagRepository, filterRepository);
     }
 }

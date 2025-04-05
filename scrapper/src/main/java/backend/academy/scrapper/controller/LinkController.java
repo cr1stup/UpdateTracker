@@ -35,7 +35,8 @@ public class LinkController {
 
     @DeleteMapping
     public LinkResponse removeLink(
-            @RequestHeader(name = "Tg-Chat-Id") Long tgChatId, @RequestBody @Valid RemoveLinkRequest addLinkRequest) {
-        return linkService.removeLink(addLinkRequest.link(), tgChatId);
+            @RequestHeader(name = "Tg-Chat-Id") Long tgChatId,
+            @RequestBody @Valid RemoveLinkRequest removeLinkRequest) {
+        return linkService.removeLink(removeLinkRequest.link(), tgChatId);
     }
 }

@@ -33,23 +33,18 @@ public class LinkUpdateScheduler {
         log.info("Links update started");
 
         List<Link> linksToCheck = linkService.getListLinkToCheck(
-            config.scheduler().forceCheckDelay(),
-            config.scheduler().batchSize()
-        );
+                config.scheduler().forceCheckDelay(), config.scheduler().batchSize());
 
         List<CompletableFuture<Void>> futures = linksToCheck.stream()
-            .map(link -> CompletableFuture.runAsync(
-                () -> processLink(link),
-                linkUpdateTaskExecutor
-            ))
-            .toList();
+                .map(link -> CompletableFuture.runAsync(() -> processLink(link), linkUpdateTaskExecutor))
+                .toList();
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
-            .exceptionally(ex -> {
-                log.info("Error during link processing", ex);
-                return null;
-            })
-            .join();
+                .exceptionally(ex -> {
+                    log.info("Error during link processing", ex);
+                    return null;
+                })
+                .join();
 
         log.info("Links update completed. Processed {} links", linksToCheck.size());
     }
@@ -68,20 +63,18 @@ public class LinkUpdateScheduler {
 
     private void processLinkInformation(LinkInformation linkInformation, Link link) {
         linkInformation.events().stream()
-            .filter(event -> event.lastModified().isAfter(link.updatedAt()))
-            .findFirst()
-            .ifPresentOrElse(
-                event -> {
-                    linkService.update(link.id(), event.lastModified());
-                    log.info("Detected update for link {}", link.url());
-                    updateService.sendUpdatesToUsers(new LinkUpdate(
-                        link.id(),
-                        URI.create(link.url()),
-                        event.information(),
-                        linkService.getListOfChatId(link.id())
-                    ));
-                },
-                () -> linkService.checkNow(link.id())
-            );
+                .filter(event -> event.lastModified().isAfter(link.updatedAt()))
+                .findFirst()
+                .ifPresentOrElse(
+                        event -> {
+                            linkService.update(link.id(), event.lastModified());
+                            log.info("Detected update for link {}", link.url());
+                            updateService.sendUpdatesToUsers(new LinkUpdate(
+                                    link.id(),
+                                    URI.create(link.url()),
+                                    event.information(),
+                                    linkService.getListOfChatId(link.id())));
+                        },
+                        () -> linkService.checkNow(link.id()));
     }
 }

@@ -44,10 +44,10 @@ public class JdbcLinkService implements LinkService {
 
         var linkResponses = links.stream()
                 .map(link -> new LinkResponse(
-                    link.id(),
-                    URI.create(link.url()),
-                    tagRepository.findAllByChatLink(chatId, link.id()),
-                    filterRepository.findAllByChatLink(chatId, link.id())))
+                        link.id(),
+                        URI.create(link.url()),
+                        tagRepository.findAllByChatLink(chatId, link.id()),
+                        filterRepository.findAllByChatLink(chatId, link.id())))
                 .toList();
 
         return new ListLinksResponse(linkResponses, linkResponses.size());
@@ -80,11 +80,10 @@ public class JdbcLinkService implements LinkService {
         }
 
         var linkId = linkRepository.add(Link.create(
-            url.toString(),
-            linkInformation.title(),
-            linkInformation.events().getFirst().lastModified(),
-            OffsetDateTime.now(ZoneId.systemDefault())
-        ));
+                url.toString(),
+                linkInformation.title(),
+                linkInformation.events().getFirst().lastModified(),
+                OffsetDateTime.now(ZoneId.systemDefault())));
 
         var chatLinkId = chatLinkRepository.add(chatId, linkId);
         tagRepository.add(chatLinkId, request.tags());
@@ -98,7 +97,7 @@ public class JdbcLinkService implements LinkService {
     public LinkResponse removeLink(URI url, Long tgChatId) {
         Optional<Link> optionalLink = linkRepository.findByUrl(url.toString());
         if (optionalLink.isPresent()) {
-            Link link = optionalLink.get();
+            Link link = optionalLink.orElseThrow(LinkNotFoundException::new);
             var tags = tagRepository.findAllByChatLink(tgChatId, link.id());
             var filters = filterRepository.findAllByChatLink(tgChatId, link.id());
 

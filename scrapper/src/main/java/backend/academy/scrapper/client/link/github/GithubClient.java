@@ -45,7 +45,8 @@ public class GithubClient implements LinkClient {
     @Override
     public LinkInformation fetchInformation(URI url) {
         var profileInfo = executeRequest(webClient, "/repos" + url.getPath(), ProfileInfo.class, ProfileInfo.EMPTY);
-        var eventInfo = executeRequest(webClient, "/repos" + url.getPath() + "/issues", GithubResponse[].class, new GithubResponse[0]);
+        var eventInfo = executeRequest(
+                webClient, "/repos" + url.getPath() + "/issues", GithubResponse[].class, new GithubResponse[0]);
 
         if (profileInfo == null || profileInfo.equals(ProfileInfo.EMPTY)) {
             return null;
@@ -66,18 +67,29 @@ public class GithubClient implements LinkClient {
     public String createMetaInformation(GithubResponse response) {
         StringBuilder metaInformation = new StringBuilder();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
         String formattedTime = response.created_at() != null ? formatter.format(response.created_at()) : "N/A";
 
-        metaInformation.append("новый issue/PR:%n")
-            .append("  • User: ").append(response.user() != null ? response.user().login() : "N/A").append("%n")
-            .append("  • Title: ").append(response.title() != null ? response.title() : "N/A").append("%n")
-            .append("  • Created at: ").append(formattedTime).append("%n")
-            .append("  • Body: ").append(response.body() == null || response.body().isEmpty() ? "No description" :
-                response.body().length() > 200 ?
-                    response.body().substring(0, 200) + "..." :
-                    response.body())
-            .append("%n");
+        metaInformation
+                .append("новый issue/PR:%n")
+                .append("  • User: ")
+                .append(response.user() != null ? response.user().login() : "N/A")
+                .append("%n")
+                .append("  • Title: ")
+                .append(response.title() != null ? response.title() : "N/A")
+                .append("%n")
+                .append("  • Created at: ")
+                .append(formattedTime)
+                .append("%n")
+                .append("  • Body: ")
+                .append(
+                        response.body() == null || response.body().isEmpty()
+                                ? "No description"
+                                : response.body().length() > 200
+                                        ? response.body().substring(0, 200) + "..."
+                                        : response.body())
+                .append("%n");
 
         return metaInformation.toString().formatted();
     }

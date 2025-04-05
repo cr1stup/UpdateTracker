@@ -1,5 +1,10 @@
 package backend.academy.scrapper.client;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
 import backend.academy.scrapper.client.link.github.GithubClient;
 import backend.academy.scrapper.client.link.github.dto.GithubResponse;
 import backend.academy.scrapper.config.ScrapperConfig;
@@ -13,10 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.reactive.function.client.WebClient;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class GithubInformationTest {
@@ -36,10 +37,7 @@ class GithubInformationTest {
         when(webClientBuilder.build()).thenReturn(webClient);
 
         githubClient = new GithubClient(
-            "https://api.github.com",
-            webClientBuilder,
-            new ScrapperConfig(null, null, null, null)
-        );
+                "https://api.github.com", webClientBuilder, new ScrapperConfig(null, null, null, null));
     }
 
     @Test
@@ -47,22 +45,19 @@ class GithubInformationTest {
     void testCreateMetaInformationFullData() {
         OffsetDateTime createdAt = OffsetDateTime.of(2023, 5, 15, 14, 30, 0, 0, ZoneOffset.UTC);
         GithubResponse response = new GithubResponse(
-            "Test Issue",
-            new GithubResponse.User("testUser"),
-            createdAt,
-            "This is a test issue body that is longer than 200 characters. ".repeat(5)
-        );
+                "Test Issue",
+                new GithubResponse.User("testUser"),
+                createdAt,
+                "This is a test issue body that is longer than 200 characters. ".repeat(5));
 
         String result = githubClient.createMetaInformation(response);
 
         String expected = String.format(
-            "новый issue/PR:%n" +
-                "  • User: testUser%n" +
-                "  • Title: Test Issue%n" +
-                "  • Created at: %s%n" +
-                "  • Body: This is a test issue body that is longer than 200 characters. This is a test issue body that is longer than 200 characters. This is a test issue body that is longer than 200 characters. This is a test...%n",
-            createdAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneOffset.systemDefault()))
-        );
+                "новый issue/PR:%n" + "  • User: testUser%n"
+                        + "  • Title: Test Issue%n"
+                        + "  • Created at: %s%n"
+                        + "  • Body: This is a test issue body that is longer than 200 characters. This is a test issue body that is longer than 200 characters. This is a test issue body that is longer than 200 characters. This is a test...%n",
+                createdAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneOffset.systemDefault())));
         assertEquals(expected.trim(), result.trim());
     }
 
@@ -73,13 +68,10 @@ class GithubInformationTest {
 
         String result = githubClient.createMetaInformation(response);
 
-        String expected = String.format(
-            "новый issue/PR:%n" +
-                "  • User: N/A%n" +
-                "  • Title: N/A%n" +
-                "  • Created at: N/A%n" +
-                "  • Body: No description%n"
-        );
+        String expected = String.format("новый issue/PR:%n" + "  • User: N/A%n"
+                + "  • Title: N/A%n"
+                + "  • Created at: N/A%n"
+                + "  • Body: No description%n");
         assertEquals(expected.trim(), result.trim());
     }
 }

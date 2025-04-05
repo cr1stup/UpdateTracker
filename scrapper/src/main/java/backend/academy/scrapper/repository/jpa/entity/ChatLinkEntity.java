@@ -36,14 +36,16 @@ public class ChatLinkEntity {
     private LinkEntity link;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "chat_link_tag",
-        joinColumns = @JoinColumn(name = "chat_link_id"),
-        inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @JoinTable(
+            name = "chat_link_tag",
+            joinColumns = @JoinColumn(name = "chat_link_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<TagEntity> tags = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "chat_link_filter",
-        joinColumns = @JoinColumn(name = "chat_link_id"),
-        inverseJoinColumns = @JoinColumn(name = "filter_id"))
+    @JoinTable(
+            name = "chat_link_filter",
+            joinColumns = @JoinColumn(name = "chat_link_id"),
+            inverseJoinColumns = @JoinColumn(name = "filter_id"))
     private Set<FilterEntity> filters = new HashSet<>();
 }

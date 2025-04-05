@@ -25,7 +25,8 @@ public interface BotMessages {
 
     String TAGLIST_NAME = "/tag";
     String TAGLIST_DESCRIPTION = "просмотр тэгов и ссылок по тэгам";
-    String TAGLIST_GREATING = "Введите [all] для просмотра всех тэгов или конктретный тэг для просмотра всех привязванных ссылок";
+    String TAGLIST_GREATING =
+            "Введите [all] для просмотра всех тэгов или конктретный тэг для просмотра всех привязванных ссылок";
 
     String EMPTY_LIST = "список отслеживаемых ссылок пуст";
 

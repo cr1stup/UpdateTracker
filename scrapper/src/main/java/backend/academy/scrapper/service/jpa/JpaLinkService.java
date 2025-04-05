@@ -46,31 +46,30 @@ public class JpaLinkService implements LinkService {
     private final JpaTagRepository tagRepository;
     private final JpaFilterRepository filterRepository;
 
+    @Override
     public ListLinksResponse getListLinks(Long chatId) {
         List<ChatLinkEntity> chatLinks = chatLinkRepository.findByChatId(chatId);
 
         List<LinkResponse> linkResponses = chatLinks.stream()
-            .map(chatLink -> {
-                LinkEntity link = chatLink.link();
-                return new LinkResponse(
-                    link.id(),
-                    URI.create(link.url()),
-                    tagRepository.findTagNamesByChatLink(chatId, link.id()),
-                    filterRepository.findFilterNamesByChatLink(chatId, link.id())
-                );
-            })
-            .toList();
+                .map(chatLink -> {
+                    LinkEntity link = chatLink.link();
+                    return new LinkResponse(
+                            link.id(),
+                            URI.create(link.url()),
+                            tagRepository.findTagNamesByChatLink(chatId, link.id()),
+                            filterRepository.findFilterNamesByChatLink(chatId, link.id()));
+                })
+                .toList();
 
         return new ListLinksResponse(linkResponses, linkResponses.size());
     }
 
     @Override
     public LinkResponse addLink(AddLinkRequest request, Long chatId) {
-        ChatEntity chat = chatRepository.findById(chatId)
-            .orElseThrow(() -> {
-                log.info("user [{}] not save link: chat not found", chatId);
-                return new ChatNotFoundException();
-            });
+        ChatEntity chat = chatRepository.findById(chatId).orElseThrow(() -> {
+            log.info("user [{}] not save link: chat not found", chatId);
+            return new ChatNotFoundException();
+        });
 
         URI url = request.link();
         if (chatLinkRepository.existsByChatIdAndLinkUrl(chatId, url.toString())) {
@@ -103,23 +102,21 @@ public class JpaLinkService implements LinkService {
         chatLink = chatLinkRepository.save(chatLink);
 
         Set<TagEntity> tags = request.tags().stream()
-            .map(tagName -> tagRepository.findByName(tagName)
-                .orElseGet(() -> {
+                .map(tagName -> tagRepository.findByName(tagName).orElseGet(() -> {
                     TagEntity newTag = new TagEntity();
                     newTag.name(tagName);
                     return tagRepository.save(newTag);
                 }))
-            .collect(Collectors.toSet());
+                .collect(Collectors.toSet());
         chatLink.tags(tags);
 
         Set<FilterEntity> filters = request.filters().stream()
-            .map(filterName -> filterRepository.findByName(filterName)
-                .orElseGet(() -> {
+                .map(filterName -> filterRepository.findByName(filterName).orElseGet(() -> {
                     FilterEntity newFilter = new FilterEntity();
                     newFilter.name(filterName);
                     return filterRepository.save(newFilter);
                 }))
-            .collect(Collectors.toSet());
+                .collect(Collectors.toSet());
         chatLink.filters(filters);
 
         chatLinkRepository.save(chatLink);
@@ -129,19 +126,15 @@ public class JpaLinkService implements LinkService {
 
     @Override
     public LinkResponse removeLink(URI url, Long tgChatId) {
-        LinkEntity link = linkRepository.findByUrl(url.toString())
-            .orElseThrow(LinkNotFoundException::new);
+        LinkEntity link = linkRepository.findByUrl(url.toString()).orElseThrow(LinkNotFoundException::new);
 
-        ChatLinkEntity chatLink = chatLinkRepository.findByChatIdAndLinkId(tgChatId, link.id())
-            .orElseThrow(LinkNotFoundException::new);
+        ChatLinkEntity chatLink =
+                chatLinkRepository.findByChatIdAndLinkId(tgChatId, link.id()).orElseThrow(LinkNotFoundException::new);
 
-        List<String> tags = chatLink.tags().stream()
-            .map(TagEntity::name)
-            .collect(Collectors.toList());
+        List<String> tags = chatLink.tags().stream().map(TagEntity::name).collect(Collectors.toList());
 
-        List<String> filters = chatLink.filters().stream()
-            .map(FilterEntity::name)
-            .collect(Collectors.toList());
+        List<String> filters =
+                chatLink.filters().stream().map(FilterEntity::name).collect(Collectors.toList());
 
         chatLinkRepository.delete(chatLink);
         if (chatLinkRepository.countByLinkId(link.id()) == 0) {
@@ -165,8 +158,12 @@ public class JpaLinkService implements LinkService {
 
     @Override
     public List<Link> getListLinkToCheck(Duration after, int limit) {
-        return linkRepository.findAllByLastCheckedAtBefore(OffsetDateTime.now().minus(after), Limit.of(limit))
-            .stream().map(LinkEntity::toDto).toList();
+        return linkRepository
+                .findAllByLastCheckedAtBefore(
+                        OffsetDateTime.now(ZoneId.systemDefault()).minus(after), Limit.of(limit))
+                .stream()
+                .map(LinkEntity::toDto)
+                .toList();
     }
 
     @Override
@@ -184,6 +181,6 @@ public class JpaLinkService implements LinkService {
     @Override
     public void checkNow(Long linkId) {
         var link = linkRepository.findById(linkId).orElseThrow();
-        link.lastCheckedAt(OffsetDateTime.now());
+        link.lastCheckedAt(OffsetDateTime.now(ZoneId.systemDefault()));
     }
 }

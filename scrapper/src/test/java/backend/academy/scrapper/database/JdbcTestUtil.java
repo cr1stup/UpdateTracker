@@ -6,10 +6,10 @@ import backend.academy.scrapper.repository.jdbc.JdbcChatRepository;
 import backend.academy.scrapper.repository.jdbc.JdbcFilterRepository;
 import backend.academy.scrapper.repository.jdbc.JdbcLinkRepository;
 import backend.academy.scrapper.repository.jdbc.JdbcTagRepository;
+import java.time.OffsetDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import java.time.OffsetDateTime;
 
 @SpringBootTest
 @TestPropertySource(properties = "app.database-access-type=jdbc")

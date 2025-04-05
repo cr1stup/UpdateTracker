@@ -45,18 +45,20 @@ public class StackOverflowClient implements LinkClient {
                 StackOverflowResponse.EMPTY);
 
         var answersInfo = executeRequest(
-            webClient,
-            "/questions/" + questionId + "/answers" + params,
-            QuestionResponse.class,
-            QuestionResponse.EMPTY);
+                webClient,
+                "/questions/" + questionId + "/answers" + params,
+                QuestionResponse.class,
+                QuestionResponse.EMPTY);
 
         var commentsInfo = executeRequest(
-            webClient,
-            "/questions/" + questionId + "/comments" + params,
-            QuestionResponse.class,
-            QuestionResponse.EMPTY);
+                webClient,
+                "/questions/" + questionId + "/comments" + params,
+                QuestionResponse.class,
+                QuestionResponse.EMPTY);
 
-        if (questionInfo == null || questionInfo.items() == null || questionInfo.items().isEmpty()) {
+        if (questionInfo == null
+                || questionInfo.items() == null
+                || questionInfo.items().isEmpty()) {
             return null;
         }
 
@@ -64,14 +66,20 @@ public class StackOverflowClient implements LinkClient {
         var questionItem = questionInfo.items().getFirst();
         events.add(new LinkUpdateEvent("обновление в вопросе", questionItem.lastModified()));
 
-        if (answersInfo != null && answersInfo.items() != null && !answersInfo.items().isEmpty()) {
+        if (answersInfo != null
+                && answersInfo.items() != null
+                && !answersInfo.items().isEmpty()) {
             String metaInformation = createMetaInformation(answersInfo.items().getFirst(), questionItem.title());
-            events.add(new LinkUpdateEvent(metaInformation, answersInfo.items().getFirst().creation_date()));
+            events.add(new LinkUpdateEvent(
+                    metaInformation, answersInfo.items().getFirst().creation_date()));
         }
 
-        if (commentsInfo != null && commentsInfo.items() != null && !commentsInfo.items().isEmpty()) {
+        if (commentsInfo != null
+                && commentsInfo.items() != null
+                && !commentsInfo.items().isEmpty()) {
             String metaInformation = createMetaInformation(commentsInfo.items().getFirst(), questionItem.title());
-            events.add(new LinkUpdateEvent(metaInformation, commentsInfo.items().getFirst().creation_date()));
+            events.add(new LinkUpdateEvent(
+                    metaInformation, commentsInfo.items().getFirst().creation_date()));
         }
 
         return new LinkInformation(url, questionInfo.items().getFirst().title(), events);
@@ -80,19 +88,27 @@ public class StackOverflowClient implements LinkClient {
     public String createMetaInformation(QuestionItem item, String title) {
         StringBuilder metaInformation = new StringBuilder();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
         String formattedTime = item.creation_date() != null ? formatter.format(item.creation_date()) : "N/A";
 
-        metaInformation.append("новый комментарий/ответ:%n")
-            .append("  • Title: ").append(title != null ? title: "N/A").append("%n")
-            .append("  • User: ").append(item.owner() != null ? item.owner().name() : "N/A").append("%n")
-            .append("  • Created at: ").append(formattedTime).append("%n")
-            .append("  • Body: ").append(item.body() != null ?
-                item.body().length() > 200 ?
-                    item.body().substring(0, 200) + "..." :
-                    item.body()
-                : "No description")
-            .append("%n");
+        metaInformation
+                .append("новый комментарий/ответ:%n")
+                .append("  • Title: ")
+                .append(title != null ? title : "N/A")
+                .append("%n")
+                .append("  • User: ")
+                .append(item.owner() != null ? item.owner().name() : "N/A")
+                .append("%n")
+                .append("  • Created at: ")
+                .append(formattedTime)
+                .append("%n")
+                .append("  • Body: ")
+                .append(
+                        item.body() != null
+                                ? item.body().length() > 200 ? item.body().substring(0, 200) + "..." : item.body()
+                                : "No description")
+                .append("%n");
 
         return metaInformation.toString().formatted();
     }

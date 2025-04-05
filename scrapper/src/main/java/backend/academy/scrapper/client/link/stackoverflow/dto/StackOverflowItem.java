@@ -6,9 +6,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.OffsetDateTime;
 
 public record StackOverflowItem(
-    String title,
-    @JsonProperty("last_edit_date")
-    @JsonDeserialize(using = UnixTimestampDeserializer.class)
-    OffsetDateTime lastModified
-) {
-}
+        String title,
+        @JsonProperty("last_edit_date") @JsonDeserialize(using = UnixTimestampDeserializer.class)
+                OffsetDateTime lastModified) {}

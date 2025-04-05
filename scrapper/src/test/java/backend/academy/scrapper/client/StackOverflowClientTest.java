@@ -1,5 +1,10 @@
 package backend.academy.scrapper.client;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
+
 import backend.academy.scrapper.client.link.stackoverflow.StackOverflowClient;
 import backend.academy.scrapper.client.link.stackoverflow.dto.QuestionItem;
 import backend.academy.scrapper.client.link.stackoverflow.dto.QuestionResponse;
@@ -18,10 +23,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class StackOverflowClientTest {
@@ -41,21 +42,14 @@ class StackOverflowClientTest {
     private WebClient.ResponseSpec responseSpec;
 
     private final URI testUri = URI.create("https://stackoverflow.com/questions/12345/test-question");
-    private final OffsetDateTime testTime = OffsetDateTime.of(
-        2023, 12, 15,
-        14, 30, 0, 0,
-        ZoneOffset.UTC
-    );
+    private final OffsetDateTime testTime = OffsetDateTime.of(2023, 12, 15, 14, 30, 0, 0, ZoneOffset.UTC);
 
     @BeforeEach
     void setUp() {
         lenient().when(webClientBuilder.baseUrl(anyString())).thenReturn(webClientBuilder);
         lenient().when(webClientBuilder.build()).thenReturn(webClient);
 
-        stackOverflowClient = new StackOverflowClient(
-            "https://api.stackoverflow.test",
-            webClientBuilder
-        );
+        stackOverflowClient = new StackOverflowClient("https://api.stackoverflow.test", webClientBuilder);
 
         lenient().when(webClient.get()).thenReturn(requestHeadersUriSpec);
         lenient().when(requestHeadersUriSpec.uri(anyString())).thenReturn(requestHeadersUriSpec);
@@ -66,21 +60,17 @@ class StackOverflowClientTest {
     @DisplayName("information should format metadata with all fields")
     void testCreateMetaInformationFormatting() {
         var questionItem = new QuestionItem(
-            new QuestionItem.Owner("testUser"),
-            testTime,
-            "This is a detailed answer body that explains the solution to the problem."
-        );
+                new QuestionItem.Owner("testUser"),
+                testTime,
+                "This is a detailed answer body that explains the solution to the problem.");
         String questionTitle = "How to test Spring WebClient?";
 
         String result = stackOverflowClient.createMetaInformation(questionItem, questionTitle);
 
-        String expected = String.format(
-            "новый комментарий/ответ:%n" +
-                "  • Title: How to test Spring WebClient?%n" +
-                "  • User: testUser%n" +
-                "  • Created at: 15.12.2023 14:30%n" +
-                "  • Body: This is a detailed answer body that explains the solution to the problem.%n"
-        );
+        String expected = String.format("новый комментарий/ответ:%n" + "  • Title: How to test Spring WebClient?%n"
+                + "  • User: testUser%n"
+                + "  • Created at: 15.12.2023 14:30%n"
+                + "  • Body: This is a detailed answer body that explains the solution to the problem.%n");
         assertThat(result.trim()).isEqualTo(expected.trim());
     }
 
@@ -104,11 +94,7 @@ class StackOverflowClientTest {
     @DisplayName("information should create both question and answer events")
     void testFetchInformationReturnAllEvents() {
         var soItem = new StackOverflowItem("Question Title", testTime);
-        var questionItem = new QuestionItem(
-            new QuestionItem.Owner("answerOwner"),
-            testTime.plusDays(1),
-            "Answer body"
-        );
+        var questionItem = new QuestionItem(new QuestionItem.Owner("answerOwner"), testTime.plusDays(1), "Answer body");
         mockQuestionResponse(soItem);
         mockAnswerResponse(questionItem);
 
@@ -122,17 +108,16 @@ class StackOverflowClientTest {
 
     private void mockQuestionResponse(StackOverflowItem item) {
         when(responseSpec.bodyToMono(StackOverflowResponse.class))
-            .thenReturn(Mono.just(new StackOverflowResponse(List.of(item))));
+                .thenReturn(Mono.just(new StackOverflowResponse(List.of(item))));
     }
 
     private void mockAnswerResponse(QuestionItem item) {
         when(responseSpec.bodyToMono(QuestionResponse.class))
-            .thenReturn(Mono.just(new QuestionResponse(List.of(item))))
-            .thenReturn(Mono.just(QuestionResponse.EMPTY));
+                .thenReturn(Mono.just(new QuestionResponse(List.of(item))))
+                .thenReturn(Mono.just(QuestionResponse.EMPTY));
     }
 
     private void mockEmptyAnswerResponse() {
-        when(responseSpec.bodyToMono(QuestionResponse.class))
-            .thenReturn(Mono.just(QuestionResponse.EMPTY));
+        when(responseSpec.bodyToMono(QuestionResponse.class)).thenReturn(Mono.just(QuestionResponse.EMPTY));
     }
 }

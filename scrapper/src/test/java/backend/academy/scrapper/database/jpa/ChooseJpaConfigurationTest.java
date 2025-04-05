@@ -1,5 +1,7 @@
 package backend.academy.scrapper.database.jpa;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import backend.academy.scrapper.database.IntegrationEnvironment;
 import backend.academy.scrapper.service.ChatService;
 import backend.academy.scrapper.service.LinkService;
@@ -10,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @TestPropertySource(properties = "app.database-access-type=jpa")

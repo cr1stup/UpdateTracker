@@ -11,13 +11,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "link")
@@ -49,12 +49,6 @@ public class LinkEntity {
     private Set<ChatEntity> chats = new HashSet<>();
 
     public Link toDto() {
-        return new Link(
-            id,
-            url,
-            description,
-            updatedAt,
-            lastCheckedAt
-        );
+        return new Link(id, url, description, updatedAt, lastCheckedAt);
     }
 }

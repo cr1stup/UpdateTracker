@@ -15,12 +15,7 @@ public class Link {
     private OffsetDateTime updatedAt;
     private OffsetDateTime lastCheckedAt;
 
-    public static Link create(
-        String url,
-        String description,
-        OffsetDateTime updatedAt,
-        OffsetDateTime lastCheckedAt
-    ) {
+    public static Link create(String url, String description, OffsetDateTime updatedAt, OffsetDateTime lastCheckedAt) {
         return new Link(0, url, description, updatedAt, lastCheckedAt);
     }
 }

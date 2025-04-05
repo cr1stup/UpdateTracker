@@ -1,11 +1,12 @@
 package backend.academy.bot.handler.state;
 
 import backend.academy.bot.client.dto.LinkResponse;
-import backend.academy.bot.repository.BotRepository;
 import backend.academy.bot.service.BotService;
 import backend.academy.bot.util.BotMessages;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,9 @@ public class TagListStateHandler implements StateHandler {
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        String[] userText = update.message().text().split(" ");
+        List<String> userText = Arrays.stream(update.message().text().trim().split("\\s+"))
+                .filter(s -> !s.isEmpty())
+                .toList();
         var response = botService.getAllLinks(chatId).answer();
 
         if (response.links() == null || response.links().isEmpty()) {
@@ -34,24 +37,26 @@ public class TagListStateHandler implements StateHandler {
             return new SendMessage(chatId, BotMessages.EMPTY_LIST);
         }
 
-        if (userText.length == 1 && "all".equalsIgnoreCase(userText[0])) {
+        if (userText.size() == 1 && "all".equalsIgnoreCase(userText.getFirst())) {
             String allTags = response.links().stream()
-                .flatMap(link -> link.tags().stream())
-                .distinct()
-                .collect(Collectors.joining(", "));
+                    .flatMap(link -> link.tags().stream())
+                    .distinct()
+                    .collect(Collectors.joining(", "));
 
             return new SendMessage(chatId, "Ваши теги: " + allTags);
         }
 
-        if ((userText.length == 1 && !BotMessages.TAGLIST_NAME.equals(userText[0]))
-            || (userText.length == 2 && BotMessages.TAGLIST_NAME.equals(userText[0])))
-        {
+        if ((userText.size() == 1 && !BotMessages.TAGLIST_NAME.equals(userText.getFirst()))
+                || (userText.size() == 2 && BotMessages.TAGLIST_NAME.equals(userText.getFirst()))) {
             int id = 1;
             boolean found = false;
-            String tagName = userText.length == 1? userText[0] : userText[1];
+            String tagName = userText.size() == 1 ? userText.getFirst() : userText.get(1);
 
             StringBuilder linksMessage = new StringBuilder();
-            linksMessage.append("Список отслеживаемых ссылок по тэгу ").append(tagName).append(":%n");
+            linksMessage
+                    .append("Список отслеживаемых ссылок по тэгу ")
+                    .append(tagName)
+                    .append(":%n");
 
             for (LinkResponse link : response.links()) {
                 if (link.tags().contains(tagName)) {

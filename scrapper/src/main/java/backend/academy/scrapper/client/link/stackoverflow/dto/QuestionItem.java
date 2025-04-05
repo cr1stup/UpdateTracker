@@ -6,13 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.OffsetDateTime;
 
 public record QuestionItem(
-    Owner owner,
-    @JsonDeserialize(using = UnixTimestampDeserializer.class)
-    OffsetDateTime creation_date,
-    String body
-) {
-    public record Owner(
-        @JsonProperty("display_name")
-        String name
-    ) {}
+        Owner owner,
+        @JsonDeserialize(using = UnixTimestampDeserializer.class) OffsetDateTime creation_date,
+        String body) {
+    public record Owner(@JsonProperty("display_name") String name) {}
 }

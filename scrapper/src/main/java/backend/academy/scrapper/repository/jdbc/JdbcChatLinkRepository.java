@@ -15,5 +15,4 @@ public interface JdbcChatLinkRepository {
     boolean isLinkAlreadyExist(long chatId, URI url);
 
     void remove(long chatId, long linkId);
-
 }

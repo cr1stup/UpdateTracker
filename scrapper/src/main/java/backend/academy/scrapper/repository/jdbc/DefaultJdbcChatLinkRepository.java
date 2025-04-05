@@ -15,7 +15,8 @@ public class DefaultJdbcChatLinkRepository implements JdbcChatLinkRepository {
 
     @Override
     public List<Link> findAllByChatId(long chatId) {
-        String sql = """
+        String sql =
+                """
                 SELECT
                   link.*
                 FROM
@@ -24,10 +25,7 @@ public class DefaultJdbcChatLinkRepository implements JdbcChatLinkRepository {
                 WHERE
                   chat_link.chat_id = ?""";
 
-        return client.sql(sql)
-            .params(chatId)
-            .query(Link.class)
-            .list();
+        return client.sql(sql).params(chatId).query(Link.class).list();
     }
 
     @Override
@@ -38,30 +36,29 @@ public class DefaultJdbcChatLinkRepository implements JdbcChatLinkRepository {
         WHERE link_id = :linkId
         """;
 
-        return client.sql(sql)
-            .param("linkId", linkId)
-            .query(Long.class)
-            .list();
+        return client.sql(sql).param("linkId", linkId).query(Long.class).list();
     }
 
     @Override
     public Long add(long chatId, long linkId) {
-        String sql = """
+        String sql =
+                """
         INSERT INTO chat_link (chat_id, link_id)
         VALUES (:chatId, :linkId)
         RETURNING id
         """;
 
         return client.sql(sql)
-            .param("chatId", chatId)
-            .param("linkId", linkId)
-            .query(Long.class)
-            .single();
+                .param("chatId", chatId)
+                .param("linkId", linkId)
+                .query(Long.class)
+                .single();
     }
 
     @Override
     public boolean isLinkAlreadyExist(long chatId, URI url) {
-        String sql = """
+        String sql =
+                """
         SELECT COUNT(*) > 0
         FROM chat_link cl
         JOIN link l ON cl.link_id = l.id
@@ -69,16 +66,16 @@ public class DefaultJdbcChatLinkRepository implements JdbcChatLinkRepository {
         """;
 
         return client.sql(sql)
-            .param("chatId", chatId)
-            .param("url", url.toString())
-            .query(Boolean.class)
-            .single();
+                .param("chatId", chatId)
+                .param("url", url.toString())
+                .query(Boolean.class)
+                .single();
     }
 
     @Override
     public void remove(long chatId, long linkId) {
         client.sql("DELETE FROM chat_link WHERE chat_id = ? AND link_id = ?")
-            .params(List.of(chatId, linkId))
-            .update();
+                .params(List.of(chatId, linkId))
+                .update();
     }
 }

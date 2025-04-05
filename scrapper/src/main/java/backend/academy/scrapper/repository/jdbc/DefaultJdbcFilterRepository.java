@@ -1,9 +1,9 @@
 package backend.academy.scrapper.repository.jdbc;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -17,7 +17,8 @@ public class DefaultJdbcFilterRepository implements JdbcFilterRepository {
             return;
         }
 
-        String upsertFilterSql = """
+        String upsertFilterSql =
+                """
         INSERT INTO filter (name)
         VALUES (:filterName)
         ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
@@ -25,30 +26,30 @@ public class DefaultJdbcFilterRepository implements JdbcFilterRepository {
         """;
 
         List<Long> filterIds = filters.stream()
-            .distinct()
-            .map(filterName -> client.sql(upsertFilterSql)
-                .param("filterName", filterName)
-                .query(Long.class)
-                .single())
-            .toList();
+                .distinct()
+                .map(filterName -> client.sql(upsertFilterSql)
+                        .param("filterName", filterName)
+                        .query(Long.class)
+                        .single())
+                .toList();
 
-        String insertChatLinkFilterSql = """
+        String insertChatLinkFilterSql =
+                """
         INSERT INTO chat_link_filter (chat_link_id, filter_id)
         VALUES (:chatLinkId, :filterId)
         ON CONFLICT (chat_link_id, filter_id) DO NOTHING
         """;
 
-        filterIds.forEach(filterId ->
-            client.sql(insertChatLinkFilterSql)
+        filterIds.forEach(filterId -> client.sql(insertChatLinkFilterSql)
                 .param("chatLinkId", chatLinkId)
                 .param("filterId", filterId)
-                .update()
-        );
+                .update());
     }
 
     @Override
     public List<String> findAllByChatLink(Long chatId, Long linkId) {
-        String sql = """
+        String sql =
+                """
         SELECT f.name
         FROM filter f
         JOIN chat_link_filter clf ON f.id = clf.filter_id
@@ -57,31 +58,29 @@ public class DefaultJdbcFilterRepository implements JdbcFilterRepository {
         """;
 
         return client.sql(sql)
-            .param("chatId", chatId)
-            .param("linkId", linkId)
-            .query(String.class)
-            .list();
+                .param("chatId", chatId)
+                .param("linkId", linkId)
+                .query(String.class)
+                .list();
     }
 
     @Override
     public List<Long> findByName(String filter) {
-        String sql = """
+        String sql =
+                """
         SELECT clf.chat_link_id
         FROM chat_link_filter clf
         JOIN filter f ON clf.filter_id = f.id
         WHERE f.name = :filter
         """;
 
-        return client.sql(sql)
-            .param("filter", filter)
-            .query(Long.class)
-            .list();
+        return client.sql(sql).param("filter", filter).query(Long.class).list();
     }
 
     @Override
     public void remove(String filter) {
         client.sql("DELETE FROM filter WHERE name = :filter")
-            .param("filter", filter)
-            .update();
+                .param("filter", filter)
+                .update();
     }
 }

@@ -23,8 +23,8 @@ public class JdbcLinkRepositoryTest extends JdbcTestUtil {
         var id = linkRepository.add(link);
 
         Assertions.assertThat(linkRepository.findById(id).get())
-            .extracting(Link::url, Link::description)
-            .contains(link.url(), link.description());
+                .extracting(Link::url, Link::description)
+                .contains(link.url(), link.description());
     }
 
     @Test
