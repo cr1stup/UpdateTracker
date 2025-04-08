@@ -37,42 +37,55 @@ public class TagListStateHandler implements StateHandler {
             return new SendMessage(chatId, BotMessages.EMPTY_LIST);
         }
 
-        if (userText.size() == 1 && "all".equalsIgnoreCase(userText.getFirst())) {
-            String allTags = response.links().stream()
-                    .flatMap(link -> link.tags().stream())
-                    .distinct()
-                    .collect(Collectors.joining(", "));
+        switch (userText.size()) {
+            case 1 -> {
+                String first = userText.getFirst();
 
-            return new SendMessage(chatId, "Ваши теги: " + allTags);
-        }
+                if ("all".equalsIgnoreCase(first)) {
+                    String allTags = response.links().stream()
+                            .flatMap(link -> link.tags().stream())
+                            .distinct()
+                            .collect(Collectors.joining(", "));
+                    return new SendMessage(chatId, "Ваши теги: " + allTags);
+                }
 
-        if ((userText.size() == 1 && !BotMessages.TAGLIST_NAME.equals(userText.getFirst()))
-                || (userText.size() == 2 && BotMessages.TAGLIST_NAME.equals(userText.getFirst()))) {
-            int id = 1;
-            boolean found = false;
-            String tagName = userText.size() == 1 ? userText.getFirst() : userText.get(1);
-
-            StringBuilder linksMessage = new StringBuilder();
-            linksMessage
-                    .append("Список отслеживаемых ссылок по тэгу ")
-                    .append(tagName)
-                    .append(":%n");
-
-            for (LinkResponse link : response.links()) {
-                if (link.tags().contains(tagName)) {
-                    found = true;
-                    linksMessage.append(id).append(". ").append(link.url()).append("%n");
-                    id++;
+                if (!BotMessages.TAGLIST_NAME.equals(first)) {
+                    return buildTagLinksMessage(chatId, first, response.links());
                 }
             }
-
-            if (!found) {
-                return new SendMessage(chatId, "Введите верный тег");
+            case 2 -> {
+                if (BotMessages.TAGLIST_NAME.equals(userText.getFirst())) {
+                    String tagName = userText.get(1);
+                    return buildTagLinksMessage(chatId, tagName, response.links());
+                }
             }
-
-            return new SendMessage(chatId, linksMessage.toString().formatted());
         }
 
         return new SendMessage(chatId, BotMessages.TAGLIST_GREATING);
+    }
+
+    private SendMessage buildTagLinksMessage(long chatId, String tagName, List<LinkResponse> links) {
+        int id = 1;
+        boolean found = false;
+
+        StringBuilder linksMessage = new StringBuilder();
+        linksMessage
+                .append("Список отслеживаемых ссылок по тэгу ")
+                .append(tagName)
+                .append(":%n");
+
+        for (LinkResponse link : links) {
+            if (link.tags().contains(tagName)) {
+                found = true;
+                linksMessage.append(id).append(". ").append(link.url()).append("%n");
+                id++;
+            }
+        }
+
+        if (!found) {
+            return new SendMessage(chatId, "Введите верный тег");
+        }
+
+        return new SendMessage(chatId, linksMessage.toString().formatted());
     }
 }

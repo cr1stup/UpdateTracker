@@ -29,7 +29,7 @@ services:
       - backend
 
 volumes:
-  postgresql: { }
+  postgresql:
 
 networks:
-  backend: { }
+  backend:
