@@ -34,10 +34,10 @@ public abstract class IntegrationEnvironment {
         Database database = DatabaseFactory.getInstance()
                 .findCorrectDatabaseImplementation(new JdbcConnection(container.createConnection("")));
 
-        Liquibase liquibase = new Liquibase(
-                "master.xml",
-                new DirectoryResourceAccessor(Path.of("E:\\InteljCode\\java-cr1stup\\migrations")),
-                database);
+        Path migrationPath = Path.of("../migrations");
+
+        Liquibase liquibase = new Liquibase("master.xml", new DirectoryResourceAccessor(migrationPath), database);
+
         liquibase.update();
     }
 
