@@ -12,7 +12,9 @@ public record ScrapperConfig(
         @NotNull Scheduler scheduler,
         @NotEmpty String githubToken,
         StackOverflowCredentials stackOverflow,
-        AccessType databaseAccessType) {
+        AccessType databaseAccessType,
+        KafkaConfiguration kafka,
+        MessageTransport messageTransport) {
     public record StackOverflowCredentials(@NotEmpty String key, @NotEmpty String accessToken) {}
 
     public record Scheduler(
@@ -26,4 +28,13 @@ public record ScrapperConfig(
         JDBC,
         JPA
     }
+
+    public enum MessageTransport {
+        HTTP,
+        KAFKA
+    }
+
+    public record KafkaConfiguration(
+        String updatesTopicName
+    ) {}
 }
