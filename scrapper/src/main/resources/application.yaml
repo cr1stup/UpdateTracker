@@ -10,6 +10,9 @@ app:
     key: ${SO_TOKEN_KEY}
     access-token: ${SO_ACCESS_TOKEN}
   database-access-type: jpa
+  kafka:
+    updates-topic-name: updates
+  message-transport: kafka
 
 bot:
   url: http://localhost:8080
@@ -33,6 +36,19 @@ spring:
     username: postgres
     password: postgres
     url: jdbc:postgresql://localhost:5432/scrapper
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      bootstrap-servers: localhost:29092
+      properties:
+        spring.json.add.type.headers: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 60000
 
 server:
   port: 8081
