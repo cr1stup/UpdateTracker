@@ -6,6 +6,7 @@ import backend.academy.scrapper.config.ScrapperConfig;
 import backend.academy.scrapper.dto.Link;
 import backend.academy.scrapper.dto.LinkInformation;
 import backend.academy.scrapper.dto.LinkUpdate;
+import backend.academy.scrapper.dto.EventInformation;
 import backend.academy.scrapper.service.LinkService;
 import backend.academy.scrapper.service.UpdateService;
 import java.net.URI;
@@ -69,11 +70,13 @@ public class LinkUpdateScheduler {
                         event -> {
                             linkService.update(link.id(), event.lastModified());
                             log.info("Detected update for link {}", link.url());
+                            EventInformation eventInformation = event.information();
+                            log.info("Update from user {}", eventInformation.user());
                             updateService.sendUpdatesToUsers(new LinkUpdate(
                                     link.id(),
                                     URI.create(link.url()),
-                                    event.information(),
-                                    linkService.getListOfChatId(link.id())));
+                                    eventInformation.getFormattedInformation(),
+                                    linkService.getListOfChatId(link.id(), eventInformation.user())));
                         },
                         () -> linkService.checkNow(link.id()));
     }

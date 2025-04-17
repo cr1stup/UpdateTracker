@@ -22,4 +22,15 @@ public interface JpaChatLinkRepository extends JpaRepository<ChatLinkEntity, Lon
 
     @Query("SELECT COUNT(cl) FROM ChatLinkEntity cl JOIN cl.filters f WHERE f.name = :filterName")
     long countByFilterName(@Param("filterName") String filterName);
+
+    @Query("""
+        SELECT cl.chat.id
+        FROM ChatLinkEntity cl
+        WHERE cl.link.id = :linkId
+        AND NOT EXISTS (
+            SELECT 1 FROM cl.filters f
+            WHERE f.name = :filterName
+        )
+        """)
+    List<Long> findAllByLinkIdWithFilter(@Param("linkId") Long linkId, @Param("filterName") String filterName);
 }

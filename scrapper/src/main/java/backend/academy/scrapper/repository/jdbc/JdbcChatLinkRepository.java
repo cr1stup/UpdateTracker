@@ -10,6 +10,8 @@ public interface JdbcChatLinkRepository {
 
     List<Long> findAllByLinkId(long linkId);
 
+    List<Long> findAllByLinkIdWithFilter(long linkId, String filter);
+
     Long add(long chatId, long linkId);
 
     boolean isLinkAlreadyExist(long chatId, URI url);

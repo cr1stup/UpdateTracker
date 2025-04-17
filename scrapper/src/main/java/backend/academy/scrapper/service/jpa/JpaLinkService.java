@@ -171,9 +171,12 @@ public class JpaLinkService implements LinkService {
     }
 
     @Override
-    public List<Long> getListOfChatId(Long linkId) {
-        var link = linkRepository.findById(linkId).orElseThrow();
-        return link.chats().stream().map(ChatEntity::id).toList();
+    public List<Long> getListOfChatId(Long linkId, String userFilter) {
+        if (userFilter == null || userFilter.isEmpty()) {
+            var link = linkRepository.findById(linkId).orElseThrow();
+            return link.chats().stream().map(ChatEntity::id).toList();
+        }
+        return chatLinkRepository.findAllByLinkIdWithFilter(linkId, "user=" + userFilter);
     }
 
     @Override

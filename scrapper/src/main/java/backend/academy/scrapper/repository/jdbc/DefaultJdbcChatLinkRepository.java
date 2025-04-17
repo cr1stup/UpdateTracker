@@ -40,6 +40,26 @@ public class DefaultJdbcChatLinkRepository implements JdbcChatLinkRepository {
     }
 
     @Override
+    public List<Long> findAllByLinkIdWithFilter(long linkId, String filter) {
+        String sql = """
+        SELECT cl.chat_id
+        FROM chat_link cl
+        LEFT JOIN chat_link_filter clf
+            ON cl.id = clf.chat_link_id
+        LEFT JOIN filter f
+            ON clf.filter_id = f.id AND f.name = :filterName
+        WHERE cl.link_id = :linkId
+          AND f.id IS NULL
+        """;
+
+        return client.sql(sql)
+            .param("linkId", linkId)
+            .param("filterName", filter)
+            .query(Long.class)
+            .list();
+    }
+
+    @Override
     public Long add(long chatId, long linkId) {
         String sql =
                 """

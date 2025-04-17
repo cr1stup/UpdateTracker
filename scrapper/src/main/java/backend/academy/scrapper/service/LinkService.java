@@ -19,7 +19,7 @@ public interface LinkService {
 
     List<Link> getListLinkToCheck(Duration after, int limit);
 
-    List<Long> getListOfChatId(Long linkId);
+    List<Long> getListOfChatId(Long linkId, String userFilter);
 
     void update(Long linkId, OffsetDateTime lastModified);
 

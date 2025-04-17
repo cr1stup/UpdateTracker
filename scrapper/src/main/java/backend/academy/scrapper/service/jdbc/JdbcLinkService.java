@@ -130,8 +130,11 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public List<Long> getListOfChatId(Long linkId) {
-        return chatLinkRepository.findAllByLinkId(linkId);
+    public List<Long> getListOfChatId(Long linkId, String userFilter) {
+        if (userFilter == null || userFilter.isEmpty()) {
+            return chatLinkRepository.findAllByLinkId(linkId);
+        }
+        return chatLinkRepository.findAllByLinkIdWithFilter(linkId, "user=" + userFilter);
     }
 
     @Override
