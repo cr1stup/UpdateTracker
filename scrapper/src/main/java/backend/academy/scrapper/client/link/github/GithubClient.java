@@ -6,10 +6,9 @@ import backend.academy.scrapper.client.link.github.dto.ProfileInfo;
 import backend.academy.scrapper.config.ScrapperConfig;
 import backend.academy.scrapper.dto.LinkInformation;
 import backend.academy.scrapper.dto.LinkUpdateEvent;
+import backend.academy.scrapper.dto.EventInformation;
 import backend.academy.scrapper.util.LinkParser;
 import java.net.URI;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,44 +52,24 @@ public class GithubClient implements LinkClient {
         }
 
         List<LinkUpdateEvent> events = new ArrayList<>();
-        events.add(new LinkUpdateEvent("обновление в репозитории", profileInfo.lastModified()));
+        EventInformation eventInformation = EventInformation.builder()
+                .message("обновление в репозитории")
+                .build();
+
+        events.add(new LinkUpdateEvent(eventInformation, profileInfo.lastModified()));
 
         if (eventInfo != null && !Arrays.equals(eventInfo, new GithubResponse[0])) {
             GithubResponse lastEventInfo = eventInfo[0];
-            String metaInformation = createMetaInformation(lastEventInfo);
-            events.add(new LinkUpdateEvent(metaInformation, lastEventInfo.created_at()));
+            eventInformation = EventInformation.builder()
+                .message("новый issue/PR:")
+                .title(lastEventInfo.title())
+                .user(lastEventInfo.user().login())
+                .createdAt(lastEventInfo.created_at())
+                .body(lastEventInfo.body())
+                .build();
+            events.add(new LinkUpdateEvent(eventInformation, lastEventInfo.created_at()));
         }
 
         return new LinkInformation(url, profileInfo.fullName(), events);
-    }
-
-    public String createMetaInformation(GithubResponse response) {
-        StringBuilder metaInformation = new StringBuilder();
-
-        DateTimeFormatter formatter =
-                DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
-        String formattedTime = response.created_at() != null ? formatter.format(response.created_at()) : "N/A";
-
-        metaInformation
-                .append("новый issue/PR:%n")
-                .append("  • User: ")
-                .append(response.user() != null ? response.user().login() : "N/A")
-                .append("%n")
-                .append("  • Title: ")
-                .append(response.title() != null ? response.title() : "N/A")
-                .append("%n")
-                .append("  • Created at: ")
-                .append(formattedTime)
-                .append("%n")
-                .append("  • Body: ")
-                .append(
-                        response.body() == null || response.body().isEmpty()
-                                ? "No description"
-                                : response.body().length() > 200
-                                        ? response.body().substring(0, 200) + "..."
-                                        : response.body())
-                .append("%n");
-
-        return metaInformation.toString().formatted();
     }
 }

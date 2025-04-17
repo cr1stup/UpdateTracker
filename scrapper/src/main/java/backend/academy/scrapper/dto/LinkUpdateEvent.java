@@ -2,4 +2,4 @@ package backend.academy.scrapper.dto;
 
 import java.time.OffsetDateTime;
 
-public record LinkUpdateEvent(String information, OffsetDateTime lastModified) {}
+public record LinkUpdateEvent(EventInformation information, OffsetDateTime lastModified) {}
