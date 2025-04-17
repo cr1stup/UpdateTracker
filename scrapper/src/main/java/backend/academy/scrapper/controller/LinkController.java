@@ -7,6 +7,8 @@ import backend.academy.scrapper.dto.RemoveLinkRequest;
 import backend.academy.scrapper.service.LinkService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,20 +25,23 @@ public class LinkController {
     private final LinkService linkService;
 
     @GetMapping
-    public ListLinksResponse listLinks(@RequestHeader(name = "Tg-Chat-Id") Long tgChatId) {
-        return linkService.getListLinks(tgChatId);
+    @Cacheable(value = "user-links", key = "#chatId")
+    public ListLinksResponse listLinks(@RequestHeader(name = "Tg-Chat-Id") Long chatId) {
+        return linkService.getListLinks(chatId);
     }
 
     @PostMapping
+    @CacheEvict(value = "user-links", key = "#chatId")
     public LinkResponse addLink(
-            @RequestHeader(name = "Tg-Chat-Id") Long tgChatId, @RequestBody @Valid AddLinkRequest addLinkRequest) {
-        return linkService.addLink(addLinkRequest, tgChatId);
+            @RequestHeader(name = "Tg-Chat-Id") Long chatId, @RequestBody @Valid AddLinkRequest addLinkRequest) {
+        return linkService.addLink(addLinkRequest, chatId);
     }
 
     @DeleteMapping
+    @CacheEvict(value = "user-links", key = "#chatId")
     public LinkResponse removeLink(
-            @RequestHeader(name = "Tg-Chat-Id") Long tgChatId,
+            @RequestHeader(name = "Tg-Chat-Id") Long chatId,
             @RequestBody @Valid RemoveLinkRequest removeLinkRequest) {
-        return linkService.removeLink(removeLinkRequest.link(), tgChatId);
+        return linkService.removeLink(removeLinkRequest.link(), chatId);
     }
 }
