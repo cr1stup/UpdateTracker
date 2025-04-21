@@ -4,9 +4,9 @@ import backend.academy.scrapper.dto.LinkUpdate;
 import backend.academy.scrapper.repository.redis.DefaultBatchedLinkUpdateRepository;
 import backend.academy.scrapper.service.chat.ChatModeService;
 import backend.academy.scrapper.service.model.Mode;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

@@ -4,9 +4,9 @@ import backend.academy.scrapper.client.link.LinkClient;
 import backend.academy.scrapper.client.link.github.dto.GithubResponse;
 import backend.academy.scrapper.client.link.github.dto.ProfileInfo;
 import backend.academy.scrapper.config.ScrapperConfig;
+import backend.academy.scrapper.dto.EventInformation;
 import backend.academy.scrapper.dto.LinkInformation;
 import backend.academy.scrapper.dto.LinkUpdateEvent;
-import backend.academy.scrapper.dto.EventInformation;
 import backend.academy.scrapper.util.LinkParser;
 import java.net.URI;
 import java.util.ArrayList;
@@ -52,21 +52,20 @@ public class GithubClient implements LinkClient {
         }
 
         List<LinkUpdateEvent> events = new ArrayList<>();
-        EventInformation eventInformation = EventInformation.builder()
-                .message("обновление в репозитории")
-                .build();
+        EventInformation eventInformation =
+                EventInformation.builder().message("обновление в репозитории").build();
 
         events.add(new LinkUpdateEvent(eventInformation, profileInfo.lastModified()));
 
         if (eventInfo != null && !Arrays.equals(eventInfo, new GithubResponse[0])) {
             GithubResponse lastEventInfo = eventInfo[0];
             eventInformation = EventInformation.builder()
-                .message("новый issue/PR:")
-                .title(lastEventInfo.title())
-                .user(lastEventInfo.user().login())
-                .createdAt(lastEventInfo.created_at())
-                .body(lastEventInfo.body())
-                .build();
+                    .message("новый issue/PR:")
+                    .title(lastEventInfo.title())
+                    .user(lastEventInfo.user().login())
+                    .createdAt(lastEventInfo.created_at())
+                    .body(lastEventInfo.body())
+                    .build();
             events.add(new LinkUpdateEvent(eventInformation, lastEventInfo.created_at()));
         }
 

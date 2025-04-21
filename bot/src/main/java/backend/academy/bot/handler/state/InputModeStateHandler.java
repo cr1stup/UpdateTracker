@@ -9,6 +9,8 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -29,10 +31,12 @@ public class InputModeStateHandler implements StateHandler {
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        String[] userText = update.message().text().split(" ");
+        List<String> userText = Arrays.stream(update.message().text().trim().split("\\s+"))
+                .filter(s -> !s.isEmpty())
+                .toList();
         var currentMode = botService.getChatMode(chatId).answer();
 
-        if (userText.length == 1 && Mode.IMMEDIATE.modeName().equalsIgnoreCase(userText[0])) {
+        if (userText.size() == 1 && Mode.IMMEDIATE.modeName().equalsIgnoreCase(userText.getFirst())) {
             if (currentMode.name().equalsIgnoreCase(Mode.IMMEDIATE.modeName())) {
                 return new SendMessage(chatId, "У вас уже установлен данный режим");
             } else {
@@ -45,12 +49,13 @@ public class InputModeStateHandler implements StateHandler {
             }
         }
 
-        if (userText.length == 2
-            && Mode.DAILY.modeName().equalsIgnoreCase(userText[0])
-            && TIME_PATTERN.matcher(userText[1]).matches()
-        ) {
+        if (userText.size() == 2
+                && Mode.DAILY.modeName().equalsIgnoreCase(userText.getFirst())
+                && TIME_PATTERN.matcher(userText.get(1)).matches()) {
             var response = botService.setChatMode(
-                chatId, Mode.DAILY.modeName(), LocalTime.parse(userText[1], DateTimeFormatter.ofPattern("H:mm")));
+                    chatId,
+                    Mode.DAILY.modeName(),
+                    LocalTime.parse(userText.get(1), DateTimeFormatter.ofPattern("H:mm")));
             if (response != null && response.isError()) {
                 return new SendMessage(chatId, response.getErrorMessage());
             }

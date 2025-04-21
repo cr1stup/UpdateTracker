@@ -5,9 +5,9 @@ import backend.academy.scrapper.repository.jpa.entity.ChatModeEntity;
 import backend.academy.scrapper.repository.jpa.entity.ModeEntity;
 import backend.academy.scrapper.repository.jpa.repository.JpaChatModeRepository;
 import backend.academy.scrapper.repository.jpa.repository.JpaModeRepository;
-import backend.academy.scrapper.service.update.BatchUpdateService;
 import backend.academy.scrapper.service.chat.ChatModeService;
 import backend.academy.scrapper.service.model.Mode;
+import backend.academy.scrapper.service.update.BatchUpdateService;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,26 +27,26 @@ public class JpaChatModeService implements ChatModeService {
     public void setMode(Long chatId, String modeName, LocalTime time) {
         Mode mode = Mode.fromString(modeName);
 
-        ModeEntity modeEntity = modeRepository.findByName(mode.modeName())
-            .orElseGet(() -> {
-                ModeEntity newMode = new ModeEntity();
-                newMode.name(mode.modeName());
-                return modeRepository.save(newMode);
-            });
+        ModeEntity modeEntity = modeRepository.findByName(mode.modeName()).orElseGet(() -> {
+            ModeEntity newMode = new ModeEntity();
+            newMode.name(mode.modeName());
+            return modeRepository.save(newMode);
+        });
 
-        ChatModeEntity chatMode = chatModeRepository.findByChatId(chatId)
-            .map(existing -> {
-                existing.mode(modeEntity);
-                existing.time(time);
-                return existing;
-            })
-            .orElseGet(() -> {
-                ChatModeEntity newChatMode = new ChatModeEntity();
-                newChatMode.chatId(chatId);
-                newChatMode.mode(modeEntity);
-                newChatMode.time(time);
-                return newChatMode;
-            });
+        ChatModeEntity chatMode = chatModeRepository
+                .findByChatId(chatId)
+                .map(existing -> {
+                    existing.mode(modeEntity);
+                    existing.time(time);
+                    return existing;
+                })
+                .orElseGet(() -> {
+                    ChatModeEntity newChatMode = new ChatModeEntity();
+                    newChatMode.chatId(chatId);
+                    newChatMode.mode(modeEntity);
+                    newChatMode.time(time);
+                    return newChatMode;
+                });
 
         chatModeRepository.save(chatMode);
 
@@ -58,18 +58,17 @@ public class JpaChatModeService implements ChatModeService {
     @Override
     public ChatMode getMode(Long chatId) {
         log.info("Getting mode: {}", chatId);
-        ChatModeEntity chatModeEntity = chatModeRepository.findByChatId(chatId)
-            .orElseGet(() -> {
-                ChatModeEntity newChatMode = new ChatModeEntity();
-                ModeEntity modeEntity = new ModeEntity();
-                modeEntity.name(Mode.IMMEDIATE.modeName());
-                modeRepository.save(modeEntity);
+        ChatModeEntity chatModeEntity = chatModeRepository.findByChatId(chatId).orElseGet(() -> {
+            ChatModeEntity newChatMode = new ChatModeEntity();
+            ModeEntity modeEntity = new ModeEntity();
+            modeEntity.name(Mode.IMMEDIATE.modeName());
+            modeRepository.save(modeEntity);
 
-                newChatMode.chatId(chatId);
-                newChatMode.mode(modeEntity);
-                newChatMode.time(null);
-                return chatModeRepository.save(newChatMode);
-            });
+            newChatMode.chatId(chatId);
+            newChatMode.mode(modeEntity);
+            newChatMode.time(null);
+            return chatModeRepository.save(newChatMode);
+        });
         log.info("Current mode: {}", chatModeEntity.mode().name());
         return new ChatMode(chatId, chatModeEntity.mode().name(), chatModeEntity.time());
     }

@@ -40,8 +40,7 @@ public class LinkController {
     @DeleteMapping
     @CacheEvict(value = "user-links", key = "#chatId")
     public LinkResponse removeLink(
-            @RequestHeader(name = "Tg-Chat-Id") Long chatId,
-            @RequestBody @Valid RemoveLinkRequest removeLinkRequest) {
+            @RequestHeader(name = "Tg-Chat-Id") Long chatId, @RequestBody @Valid RemoveLinkRequest removeLinkRequest) {
         return linkService.removeLink(removeLinkRequest.link(), chatId);
     }
 }

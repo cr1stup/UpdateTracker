@@ -11,11 +11,11 @@ public interface JpaChatModeRepository extends JpaRepository<ChatModeEntity, Lon
 
     Optional<ChatModeEntity> findByChatId(Long chatId);
 
-    @Query("""
+    @Query(
+            """
         SELECT cm.chatId FROM ChatModeEntity cm
         JOIN cm.mode m
         WHERE m.name = :modeName
     """)
     List<Long> findChatIdsByModeName(@Param("modeName") String modeName);
 }
-

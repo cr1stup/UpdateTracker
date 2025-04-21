@@ -1,5 +1,10 @@
 package backend.academy.bot.kafka;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.times;
+
 import backend.academy.bot.TestcontainersConfiguration;
 import backend.academy.bot.dto.LinkUpdate;
 import backend.academy.bot.service.LinkNotificationService;
@@ -16,16 +21,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.TestPropertySource;
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.times;
 
 @SpringBootTest
-@Import({ TestcontainersConfiguration.class, KafkaTestConfig.class})
-@TestPropertySource(properties = {
-    "spring.kafka.consumer.auto-offset-reset=earliest"
-})
+@Import({TestcontainersConfiguration.class, KafkaTestConfig.class})
+@TestPropertySource(properties = {"spring.kafka.consumer.auto-offset-reset=earliest"})
 class KafkaUpdatesListenerTest {
 
     @Autowired
@@ -46,29 +45,18 @@ class KafkaUpdatesListenerTest {
     @Test
     @DisplayName("kafka processes a valid message")
     void testValidMessageIsProcessed() {
-        LinkUpdate update = new LinkUpdate(
-            1L,
-            URI.create("https://example.com"),
-            "desc",
-            List.of(123L), false
-        );
+        LinkUpdate update = new LinkUpdate(1L, URI.create("https://example.com"), "desc", List.of(123L), false);
 
         kafkaTemplate.send("updates", update);
 
-        await().atMost(5, SECONDS).untilAsserted(() ->
-            Mockito.verify(linkNotificationService, times(1)).notifyLinkUpdate(Mockito.any(LinkUpdate.class))
-        );
+        await().atMost(5, SECONDS).untilAsserted(() -> Mockito.verify(linkNotificationService, times(1))
+                .notifyLinkUpdate(Mockito.any(LinkUpdate.class)));
     }
 
     @Test
     @DisplayName("kafka sends invalid message to dlq")
     void testInvalidMessageGoesToDlq() {
-        LinkUpdate update = new LinkUpdate(
-            1L,
-            URI.create("https://example.com"),
-            "desc",
-            null, false
-        );
+        LinkUpdate update = new LinkUpdate(1L, URI.create("https://example.com"), "desc", null, false);
         Mockito.doThrow(RuntimeException.class).when(linkNotificationService).notifyLinkUpdate(update);
 
         kafkaTemplate.send("updates", update);

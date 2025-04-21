@@ -41,7 +41,8 @@ public class DefaultJdbcChatLinkRepository implements JdbcChatLinkRepository {
 
     @Override
     public List<Long> findAllByLinkIdWithFilter(long linkId, String filter) {
-        String sql = """
+        String sql =
+                """
         SELECT cl.chat_id
         FROM chat_link cl
         LEFT JOIN chat_link_filter clf
@@ -53,10 +54,10 @@ public class DefaultJdbcChatLinkRepository implements JdbcChatLinkRepository {
         """;
 
         return client.sql(sql)
-            .param("linkId", linkId)
-            .param("filterName", filter)
-            .query(Long.class)
-            .list();
+                .param("linkId", linkId)
+                .param("filterName", filter)
+                .query(Long.class)
+                .list();
     }
 
     @Override

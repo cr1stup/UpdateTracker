@@ -1,5 +1,12 @@
 package backend.academy.scrapper.redis;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import backend.academy.scrapper.TestcontainersConfiguration;
 import backend.academy.scrapper.controller.LinkController;
 import backend.academy.scrapper.dto.AddLinkRequest;
@@ -21,18 +28,9 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Import;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {LinkController.class})
-@EnableAutoConfiguration(exclude = {
-    DataSourceAutoConfiguration.class,
-    HibernateJpaAutoConfiguration.class
-})
+@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 @Import({TestcontainersConfiguration.class, RedisTestConfig.class})
 class LinkControllerCacheTest {
 
@@ -47,12 +45,8 @@ class LinkControllerCacheTest {
 
     private final Long chatId = 12345L;
 
-    private final LinkResponse linkResponse = new LinkResponse(
-        1L,
-        URI.create("https://example.com"),
-        List.of("tag1"),
-        List.of("filter1")
-    );
+    private final LinkResponse linkResponse =
+            new LinkResponse(1L, URI.create("https://example.com"), List.of("tag1"), List.of("filter1"));
 
     @BeforeEach
     void cleanUp() {
@@ -73,7 +67,8 @@ class LinkControllerCacheTest {
         assertEquals(expectedResponse, secondCall);
         verify(linkService, times(1)).getListLinks(chatId);
 
-        assertNotNull(Objects.requireNonNull(cacheManager.getCache("user-links")).get(chatId));
+        assertNotNull(
+                Objects.requireNonNull(cacheManager.getCache("user-links")).get(chatId));
     }
 
     @Test
@@ -84,7 +79,8 @@ class LinkControllerCacheTest {
         when(linkService.getListLinks(chatId)).thenReturn(initialResponse);
 
         linkController.listLinks(chatId);
-        assertNotNull(Objects.requireNonNull(cacheManager.getCache("user-links")).get(chatId));
+        assertNotNull(
+                Objects.requireNonNull(cacheManager.getCache("user-links")).get(chatId));
 
         linkController.addLink(chatId, request);
         assertNull(Objects.requireNonNull(cacheManager.getCache("user-links")).get(chatId));
@@ -98,7 +94,8 @@ class LinkControllerCacheTest {
         when(linkService.getListLinks(chatId)).thenReturn(initialResponse);
 
         linkController.listLinks(chatId);
-        assertNotNull(Objects.requireNonNull(cacheManager.getCache("user-links")).get(chatId));
+        assertNotNull(
+                Objects.requireNonNull(cacheManager.getCache("user-links")).get(chatId));
 
         linkController.removeLink(chatId, request);
         assertNull(Objects.requireNonNull(cacheManager.getCache("user-links")).get(chatId));

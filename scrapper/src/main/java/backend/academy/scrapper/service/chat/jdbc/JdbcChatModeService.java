@@ -3,13 +3,13 @@ package backend.academy.scrapper.service.chat.jdbc;
 import backend.academy.scrapper.dto.ChatMode;
 import backend.academy.scrapper.exception.ChatModeNotFoundException;
 import backend.academy.scrapper.repository.jdbc.JdbcChatModeRepository;
-import backend.academy.scrapper.service.update.BatchUpdateService;
 import backend.academy.scrapper.service.chat.ChatModeService;
 import backend.academy.scrapper.service.model.Mode;
-import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
+import backend.academy.scrapper.service.update.BatchUpdateService;
 import java.time.LocalTime;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -25,10 +25,11 @@ public class JdbcChatModeService implements ChatModeService {
             chatModeRepository.saveMode(modeName);
         }
 
-        chatModeRepository.findByChatId(chatId)
-            .ifPresentOrElse(
-                existing -> chatModeRepository.update(new ChatMode(chatId, modeName, time)),
-                () -> chatModeRepository.insert(new ChatMode(chatId, modeName, time)));
+        chatModeRepository
+                .findByChatId(chatId)
+                .ifPresentOrElse(
+                        existing -> chatModeRepository.update(new ChatMode(chatId, modeName, time)),
+                        () -> chatModeRepository.insert(new ChatMode(chatId, modeName, time)));
 
         if (modeName.equalsIgnoreCase(Mode.IMMEDIATE.modeName())) {
             batchUpdateService.sendBatchUpdateToUser(chatId);
@@ -37,11 +38,10 @@ public class JdbcChatModeService implements ChatModeService {
 
     @Override
     public ChatMode getMode(Long chatId) {
-        return chatModeRepository.findByChatId(chatId)
-            .orElseGet(() -> {
-                setDefaultMode(chatId);
-                return new ChatMode(chatId, Mode.IMMEDIATE.modeName(), null);
-            });
+        return chatModeRepository.findByChatId(chatId).orElseGet(() -> {
+            setDefaultMode(chatId);
+            return new ChatMode(chatId, Mode.IMMEDIATE.modeName(), null);
+        });
     }
 
     @Override
@@ -56,8 +56,6 @@ public class JdbcChatModeService implements ChatModeService {
 
     @Override
     public LocalTime findTimeByChatId(Long chatId) {
-        return chatModeRepository.findByChatId(chatId)
-            .map(ChatMode::time)
-            .orElseThrow(ChatModeNotFoundException::new);
+        return chatModeRepository.findByChatId(chatId).map(ChatMode::time).orElseThrow(ChatModeNotFoundException::new);
     }
 }

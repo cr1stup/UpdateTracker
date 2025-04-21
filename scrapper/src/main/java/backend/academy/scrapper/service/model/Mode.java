@@ -15,7 +15,7 @@ public enum Mode {
     }
 
     public static Mode fromString(String modeName) {
-        for (Mode mode : Mode.values()) {
+        for (Mode mode : values()) {
             if (mode.modeName.equalsIgnoreCase(modeName)) {
                 return mode;
             }

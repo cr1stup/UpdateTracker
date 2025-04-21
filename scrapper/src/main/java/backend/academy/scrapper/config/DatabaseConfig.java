@@ -14,15 +14,15 @@ import backend.academy.scrapper.repository.jpa.repository.JpaFilterRepository;
 import backend.academy.scrapper.repository.jpa.repository.JpaLinkRepository;
 import backend.academy.scrapper.repository.jpa.repository.JpaModeRepository;
 import backend.academy.scrapper.repository.jpa.repository.JpaTagRepository;
-import backend.academy.scrapper.service.update.BatchUpdateService;
 import backend.academy.scrapper.service.chat.ChatService;
-import backend.academy.scrapper.service.link.LinkService;
 import backend.academy.scrapper.service.chat.jdbc.JdbcChatModeService;
 import backend.academy.scrapper.service.chat.jdbc.JdbcChatService;
-import backend.academy.scrapper.service.link.jdbc.JdbcLinkService;
 import backend.academy.scrapper.service.chat.jpa.JpaChatModeService;
 import backend.academy.scrapper.service.chat.jpa.JpaChatService;
+import backend.academy.scrapper.service.link.LinkService;
+import backend.academy.scrapper.service.link.jdbc.JdbcLinkService;
 import backend.academy.scrapper.service.link.jpa.JpaLinkService;
+import backend.academy.scrapper.service.update.BatchUpdateService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -70,13 +70,17 @@ public class DatabaseConfig {
 
     @Bean
     @ConditionalOnProperty(name = "app.database-access-type", havingValue = "jpa")
-    public JpaChatModeService jpaChatModeService(JpaChatModeRepository chatModeRepository, JpaModeRepository modeRepository, BatchUpdateService batchUpdateService) {
+    public JpaChatModeService jpaChatModeService(
+            JpaChatModeRepository chatModeRepository,
+            JpaModeRepository modeRepository,
+            BatchUpdateService batchUpdateService) {
         return new JpaChatModeService(chatModeRepository, modeRepository, batchUpdateService);
     }
 
     @Bean
     @ConditionalOnProperty(name = "app.database-access-type", havingValue = "jdbc")
-    public JdbcChatModeService jdbcChatModeService(JdbcChatModeRepository chatModeRepository, BatchUpdateService batchUpdateService) {
+    public JdbcChatModeService jdbcChatModeService(
+            JdbcChatModeRepository chatModeRepository, BatchUpdateService batchUpdateService) {
         return new JdbcChatModeService(chatModeRepository, batchUpdateService);
     }
 }

@@ -19,8 +19,7 @@ public class ChatModeController {
     private final ChatModeService chatModeService;
 
     @PostMapping
-    public void setChatMode(@RequestHeader(name = "Tg-Chat-Id") Long id,
-                            @RequestBody @Valid ChatMode mode) {
+    public void setChatMode(@RequestHeader(name = "Tg-Chat-Id") Long id, @RequestBody @Valid ChatMode mode) {
         chatModeService.setMode(id, mode.name(), mode.time());
     }
 

@@ -1,16 +1,17 @@
 package backend.academy.scrapper.dto;
 
-import lombok.Builder;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import lombok.Builder;
 
 @Builder
 public record EventInformation(String message, String title, String user, OffsetDateTime createdAt, String body) {
 
     public String getFormattedInformation() {
         StringBuilder metaInformation = new StringBuilder();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
         String formattedTime = createdAt() != null ? formatter.format(createdAt) : null;
 
         appendIfNotNull(metaInformation, "", message);

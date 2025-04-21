@@ -11,5 +11,4 @@ public class KafkaConfiguration {
     public NewTopic newTopic(BotConfig config) {
         return new NewTopic(config.kafka().updatesTopicName() + "_dlq", 1, (short) 1);
     }
-
 }

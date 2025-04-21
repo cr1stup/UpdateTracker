@@ -34,7 +34,5 @@ public record ScrapperConfig(
         KAFKA
     }
 
-    public record KafkaConfiguration(
-        String updatesTopicName
-    ) {}
+    public record KafkaConfiguration(String updatesTopicName) {}
 }

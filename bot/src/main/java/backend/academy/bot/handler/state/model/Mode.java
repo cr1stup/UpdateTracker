@@ -18,9 +18,13 @@ public enum Mode {
     public static String getInstructionsOfInputMode() {
         StringBuilder instructions = new StringBuilder();
 
-        instructions.append("Режимы отправки уведомлений:").append("%n");
-        for (Mode mode : Mode.values()) {
-            instructions.append(mode.modeName()).append(" - ").append(mode.description()).append("%n");
+        instructions.append("Режимы отправки уведомлений:").append("%n%n");
+        for (Mode mode : values()) {
+            instructions
+                    .append(mode.modeName())
+                    .append(" - ")
+                    .append(mode.description())
+                    .append("%n%n");
         }
 
         return instructions.toString().formatted();

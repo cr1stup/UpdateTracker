@@ -5,9 +5,9 @@ import backend.academy.scrapper.client.link.stackoverflow.dto.QuestionItem;
 import backend.academy.scrapper.client.link.stackoverflow.dto.QuestionResponse;
 import backend.academy.scrapper.client.link.stackoverflow.dto.StackOverflowItem;
 import backend.academy.scrapper.client.link.stackoverflow.dto.StackOverflowResponse;
+import backend.academy.scrapper.dto.EventInformation;
 import backend.academy.scrapper.dto.LinkInformation;
 import backend.academy.scrapper.dto.LinkUpdateEvent;
-import backend.academy.scrapper.dto.EventInformation;
 import backend.academy.scrapper.util.LinkParser;
 import java.net.URI;
 import java.util.ArrayList;
@@ -64,9 +64,8 @@ public class StackOverflowClient implements LinkClient {
 
         List<LinkUpdateEvent> events = new ArrayList<>();
         var questionItem = questionInfo.items().getFirst();
-        EventInformation eventInformation = EventInformation.builder()
-            .message("обновление в вопрсосе")
-            .build();
+        EventInformation eventInformation =
+                EventInformation.builder().message("обновление в вопрсосе").build();
 
         events.add(new LinkUpdateEvent(eventInformation, questionItem.lastModified()));
         addEvent(answersInfo, events, questionItem);
@@ -81,14 +80,15 @@ public class StackOverflowClient implements LinkClient {
             QuestionItem item = info.items().getFirst();
 
             eventInformation = EventInformation.builder()
-                .message("новый комментарий/ответ:")
-                .title(questionItem.title())
-                .user(item.owner().name())
-                .createdAt(item.creation_date())
-                .body(item.body())
-                .build();
+                    .message("новый комментарий/ответ:")
+                    .title(questionItem.title())
+                    .user(item.owner().name())
+                    .createdAt(item.creation_date())
+                    .body(item.body())
+                    .build();
 
-            events.add(new LinkUpdateEvent(eventInformation, info.items().getFirst().creation_date()));
+            events.add(new LinkUpdateEvent(
+                    eventInformation, info.items().getFirst().creation_date()));
         }
     }
 }

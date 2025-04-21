@@ -7,8 +7,8 @@ import backend.academy.scrapper.dto.EventInformation;
 import backend.academy.scrapper.dto.Link;
 import backend.academy.scrapper.dto.LinkInformation;
 import backend.academy.scrapper.dto.LinkUpdate;
-import backend.academy.scrapper.service.update.DispatcherUpdatesService;
 import backend.academy.scrapper.service.link.LinkService;
+import backend.academy.scrapper.service.update.DispatcherUpdatesService;
 import java.net.URI;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -76,7 +76,8 @@ public class LinkUpdateScheduler {
                                     link.id(),
                                     URI.create(link.url()),
                                     eventInformation.getFormattedInformation(),
-                                    linkService.getListOfChatId(link.id(), eventInformation.user()), false));
+                                    linkService.getListOfChatId(link.id(), eventInformation.user()),
+                                    false));
                         },
                         () -> linkService.checkNow(link.id()));
     }

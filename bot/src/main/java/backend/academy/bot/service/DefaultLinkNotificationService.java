@@ -24,9 +24,9 @@ public class DefaultLinkNotificationService implements LinkNotificationService {
             var listLinks = botService.getAllLinks(chatId).answer();
 
             if (linkUpdate.isBatch()) {
-                requestExecutor.execute(new SendMessage(
-                    chatId, "Батчинг обновлений: %n%n%s".formatted(linkUpdate.description()))
-                    .linkPreviewOptions(new LinkPreviewOptions().isDisabled(true)));
+                requestExecutor.execute(
+                        new SendMessage(chatId, "Батчинг обновлений: %n%n%s".formatted(linkUpdate.description()))
+                                .linkPreviewOptions(new LinkPreviewOptions().isDisabled(true)));
                 return;
             }
 

@@ -1,10 +1,11 @@
 package backend.academy.bot.dto;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class LinkUpdateDeserializationTest {
 
@@ -13,7 +14,8 @@ class LinkUpdateDeserializationTest {
     @Test
     @DisplayName("Valid JSON is mapped correctly to the DTO")
     void validJsonShouldDeserializeToLinkUpdate() throws Exception {
-        String json = """
+        String json =
+                """
                 {
                     "id": 11,
                     "url": "https://example.com",
@@ -31,5 +33,3 @@ class LinkUpdateDeserializationTest {
         assertThat(result.tgChatIds()).containsExactly(1001L, 1002L);
     }
 }
-
-
