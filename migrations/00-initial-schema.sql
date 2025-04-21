@@ -45,3 +45,16 @@ CREATE TABLE IF NOT EXISTS chat_link_filter
     filter_id    BIGINT NOT NULL REFERENCES filter (id) ON DELETE CASCADE,
     PRIMARY KEY (chat_link_id, filter_id)
 );
+
+CREATE TABLE IF NOT EXISTS mode
+(
+    id   BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS chat_mode
+(
+    chat_id BIGINT PRIMARY KEY REFERENCES chat (id) ON DELETE CASCADE,
+    mode_id BIGINT NOT NULL REFERENCES mode (id),
+    time    TIME
+);
