@@ -12,22 +12,23 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class JpaChatService implements ChatService {
 
-    private final JpaChatRepository jpaChatRepository;
+    private final JpaChatRepository chatRepository;
+    private final JpaChatModeService chatModeService;
 
     @Override
     public void registerChat(Long id) {
-        jpaChatRepository.findById(id).ifPresent(chat -> {
+        chatRepository.findById(id).ifPresent(chat -> {
             log.info("User [{}] not registered: chat already exists JPA", id);
             throw new ChatAlreadyRegisteredException();
         });
-
-        jpaChatRepository.save(new ChatEntity());
+        chatModeService.setDefaultMode(id);
+        chatRepository.save(new ChatEntity());
     }
 
     @Override
     public void deleteChat(Long id) {
-        ChatEntity chat = jpaChatRepository.findById(id).orElseThrow(ChatNotFoundException::new);
-        jpaChatRepository.delete(chat);
+        ChatEntity chat = chatRepository.findById(id).orElseThrow(ChatNotFoundException::new);
+        chatRepository.delete(chat);
         log.info("Chat [{}] successfully deleted", id);
     }
 }
