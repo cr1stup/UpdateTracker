@@ -1,6 +1,7 @@
 package backend.academy.bot.handler.state;
 
 import backend.academy.bot.dto.ChatMode;
+import backend.academy.bot.handler.state.model.BotState;
 import backend.academy.bot.handler.state.model.Mode;
 import backend.academy.bot.repository.BotRepository;
 import backend.academy.bot.service.BotService;

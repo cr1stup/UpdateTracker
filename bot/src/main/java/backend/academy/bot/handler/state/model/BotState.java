@@ -1,4 +1,4 @@
-package backend.academy.bot.handler.state;
+package backend.academy.bot.handler.state.model;
 
 public enum BotState {
     START,

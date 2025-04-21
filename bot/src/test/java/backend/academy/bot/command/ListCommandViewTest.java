@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import backend.academy.bot.client.dto.LinkResponse;
 import backend.academy.bot.client.dto.ListLinksResponse;
 import backend.academy.bot.dto.OptionalAnswer;
-import backend.academy.bot.handler.state.BotState;
+import backend.academy.bot.handler.state.model.BotState;
 import backend.academy.bot.handler.state.ListStateHandler;
 import backend.academy.bot.repository.BotRepository;
 import backend.academy.bot.service.BotService;

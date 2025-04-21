@@ -1,6 +1,6 @@
 package backend.academy.bot.handler.command;
 
-import backend.academy.bot.handler.state.BotState;
+import backend.academy.bot.handler.state.model.BotState;
 import backend.academy.bot.repository.BotRepository;
 import backend.academy.bot.util.BotMessages;
 import com.pengrad.telegrambot.model.Update;

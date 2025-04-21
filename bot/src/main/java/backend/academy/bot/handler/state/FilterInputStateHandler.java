@@ -1,5 +1,6 @@
 package backend.academy.bot.handler.state;
 
+import backend.academy.bot.handler.state.model.BotState;
 import backend.academy.bot.repository.BotRepository;
 import backend.academy.bot.service.BotService;
 import backend.academy.bot.util.ChatLimits;

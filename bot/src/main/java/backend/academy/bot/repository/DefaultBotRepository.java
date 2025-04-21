@@ -1,6 +1,6 @@
 package backend.academy.bot.repository;
 
-import backend.academy.bot.handler.state.BotState;
+import backend.academy.bot.handler.state.model.BotState;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
