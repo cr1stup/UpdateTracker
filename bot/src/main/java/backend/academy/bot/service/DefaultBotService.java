@@ -5,8 +5,10 @@ import backend.academy.bot.client.dto.AddLinkRequest;
 import backend.academy.bot.client.dto.LinkResponse;
 import backend.academy.bot.client.dto.ListLinksResponse;
 import backend.academy.bot.client.dto.RemoveLinkRequest;
+import backend.academy.bot.dto.ChatMode;
 import backend.academy.bot.dto.OptionalAnswer;
 import java.net.URI;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,5 +38,15 @@ public class DefaultBotService implements BotService {
     @Override
     public OptionalAnswer<ListLinksResponse> getAllLinks(Long userId) {
         return scrapperClient.listLinks(userId);
+    }
+
+    @Override
+    public OptionalAnswer<Void> setChatMode(Long id, String mode, LocalTime time) {
+        return scrapperClient.setChatMode(id, new ChatMode(id, mode, time));
+    }
+
+    @Override
+    public OptionalAnswer<ChatMode> getChatMode(Long id) {
+        return scrapperClient.getChatMode(id);
     }
 }

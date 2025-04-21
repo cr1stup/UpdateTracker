@@ -19,13 +19,20 @@ public class DefaultLinkNotificationService implements LinkNotificationService {
     private final BotService botService;
 
     @Override
-    public void notifyLinkUpdate(LinkUpdate link) {
-        link.tgChatIds().forEach(chatId -> {
+    public void notifyLinkUpdate(LinkUpdate linkUpdate) {
+        linkUpdate.tgChatIds().forEach(chatId -> {
             var listLinks = botService.getAllLinks(chatId).answer();
+
+            if (linkUpdate.isBatch()) {
+                requestExecutor.execute(new SendMessage(
+                    chatId, "Батчинг обновлений: %n%n%s".formatted(linkUpdate.description()))
+                    .linkPreviewOptions(new LinkPreviewOptions().isDisabled(true)));
+                return;
+            }
 
             try {
                 LinkResponse userLink = listLinks.links().stream()
-                        .filter(response -> response.url().equals(link.url()))
+                        .filter(response -> response.url().equals(linkUpdate.url()))
                         .findFirst()
                         .orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
 
@@ -34,10 +41,10 @@ public class DefaultLinkNotificationService implements LinkNotificationService {
                                 "%s: %s %ntags: %s %nfilters: %s%ninfo: %s"
                                         .formatted(
                                                 BotMessages.UPDATE_MESSAGE,
-                                                link.url(),
+                                                linkUpdate.url(),
                                                 userLink.tags(),
                                                 userLink.filters(),
-                                                link.description()))
+                                                linkUpdate.description()))
                         .linkPreviewOptions(new LinkPreviewOptions().isDisabled(true)));
 
             } catch (RuntimeException e) {
