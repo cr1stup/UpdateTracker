@@ -4,6 +4,7 @@ import backend.academy.bot.client.dto.AddLinkRequest;
 import backend.academy.bot.client.dto.LinkResponse;
 import backend.academy.bot.client.dto.ListLinksResponse;
 import backend.academy.bot.client.dto.RemoveLinkRequest;
+import backend.academy.bot.dto.ChatMode;
 import backend.academy.bot.dto.OptionalAnswer;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,12 @@ public interface ScrapperClient {
 
     @DeleteExchange("/tg-chat/{id}")
     OptionalAnswer<Void> deleteChat(@PathVariable Long id);
+
+    @PostExchange("/mode")
+    OptionalAnswer<Void> setChatMode(@RequestHeader("Tg-Chat-Id") Long id, @RequestBody ChatMode chatMode);
+
+    @GetExchange("mode")
+    OptionalAnswer<ChatMode> getChatMode(@RequestHeader("Tg-Chat-Id") Long id);
 
     @GetExchange("/links")
     OptionalAnswer<ListLinksResponse> listLinks(@RequestHeader("Tg-Chat-Id") Long tgChatId);
