@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "app.message-transport", havingValue = "http")
-public class HttpUpdateService implements UpdateService {
+public class HttpUpdateService implements ImmediateUpdateService {
 
     private final BotClient botClient;
 

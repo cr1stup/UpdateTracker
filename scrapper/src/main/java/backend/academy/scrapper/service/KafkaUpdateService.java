@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "app.message-transport", havingValue = "kafka")
-public class KafkaUpdateService implements UpdateService {
+public class KafkaUpdateService implements ImmediateUpdateService {
 
     private final KafkaTemplate<String, LinkUpdate> kafkaTemplate;
     private final ScrapperConfig scrapperConfig;
