@@ -28,6 +28,10 @@ public interface BotMessages {
     String TAGLIST_GREATING =
             "Введите [all] для просмотра всех тэгов или конктретный тэг для просмотра всех привязванных ссылок";
 
+    String SETMODE_NAME = "/setmode";
+    String SETMODE_DESCRIPTION = "настроить время отправки уведомлений";
+    String SETMODE_SUCCESS = "новый режим успешно установлен";
+
     String EMPTY_LIST = "список отслеживаемых ссылок пуст";
 
     String UPDATE_MESSAGE = "Обновление по вашей ссылке";
