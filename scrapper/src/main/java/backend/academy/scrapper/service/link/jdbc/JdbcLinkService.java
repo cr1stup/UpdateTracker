@@ -1,4 +1,4 @@
-package backend.academy.scrapper.service.jdbc;
+package backend.academy.scrapper.service.link.jdbc;
 
 import backend.academy.scrapper.client.link.ClientFactory;
 import backend.academy.scrapper.client.link.LinkClient;
@@ -16,7 +16,7 @@ import backend.academy.scrapper.repository.jdbc.JdbcChatRepository;
 import backend.academy.scrapper.repository.jdbc.JdbcFilterRepository;
 import backend.academy.scrapper.repository.jdbc.JdbcLinkRepository;
 import backend.academy.scrapper.repository.jdbc.JdbcTagRepository;
-import backend.academy.scrapper.service.LinkService;
+import backend.academy.scrapper.service.link.LinkService;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;

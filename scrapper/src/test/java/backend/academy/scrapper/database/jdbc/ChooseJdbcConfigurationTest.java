@@ -3,10 +3,10 @@ package backend.academy.scrapper.database.jdbc;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import backend.academy.scrapper.database.IntegrationEnvironment;
-import backend.academy.scrapper.service.ChatService;
-import backend.academy.scrapper.service.LinkService;
-import backend.academy.scrapper.service.jdbc.JdbcChatService;
-import backend.academy.scrapper.service.jdbc.JdbcLinkService;
+import backend.academy.scrapper.service.chat.ChatService;
+import backend.academy.scrapper.service.link.LinkService;
+import backend.academy.scrapper.service.chat.jdbc.JdbcChatService;
+import backend.academy.scrapper.service.link.jdbc.JdbcLinkService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package backend.academy.scrapper.controller;
 
 import backend.academy.scrapper.dto.ChatMode;
-import backend.academy.scrapper.service.ChatModeService;
+import backend.academy.scrapper.service.chat.ChatModeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package backend.academy.scrapper.service;
+package backend.academy.scrapper.service.update;
 
 import backend.academy.scrapper.client.bot.BotClient;
 import backend.academy.scrapper.dto.LinkUpdate;

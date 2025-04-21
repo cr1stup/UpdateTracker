@@ -1,6 +1,6 @@
 package backend.academy.scrapper.redis;
 
-import backend.academy.scrapper.service.LinkService;
+import backend.academy.scrapper.service.link.LinkService;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;

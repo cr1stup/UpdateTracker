@@ -1,12 +1,12 @@
-package backend.academy.scrapper.service.jpa;
+package backend.academy.scrapper.service.chat.jpa;
 
 import backend.academy.scrapper.dto.ChatMode;
 import backend.academy.scrapper.repository.jpa.entity.ChatModeEntity;
 import backend.academy.scrapper.repository.jpa.entity.ModeEntity;
 import backend.academy.scrapper.repository.jpa.repository.JpaChatModeRepository;
 import backend.academy.scrapper.repository.jpa.repository.JpaModeRepository;
-import backend.academy.scrapper.service.BatchUpdateService;
-import backend.academy.scrapper.service.ChatModeService;
+import backend.academy.scrapper.service.update.BatchUpdateService;
+import backend.academy.scrapper.service.chat.ChatModeService;
 import backend.academy.scrapper.service.model.Mode;
 import java.time.LocalTime;
 import java.util.List;

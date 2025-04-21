@@ -1,9 +1,9 @@
-package backend.academy.scrapper.service.jdbc;
+package backend.academy.scrapper.service.chat.jdbc;
 
 import backend.academy.scrapper.exception.ChatAlreadyRegisteredException;
 import backend.academy.scrapper.exception.ChatNotFoundException;
 import backend.academy.scrapper.repository.jdbc.JdbcChatRepository;
-import backend.academy.scrapper.service.ChatService;
+import backend.academy.scrapper.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

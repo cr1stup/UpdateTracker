@@ -50,7 +50,7 @@ class KafkaUpdatesListenerTest {
             1L,
             URI.create("https://example.com"),
             "desc",
-            List.of(123L)
+            List.of(123L), false
         );
 
         kafkaTemplate.send("updates", update);
@@ -67,7 +67,7 @@ class KafkaUpdatesListenerTest {
             1L,
             URI.create("https://example.com"),
             "desc",
-            null
+            null, false
         );
         Mockito.doThrow(RuntimeException.class).when(linkNotificationService).notifyLinkUpdate(update);
 

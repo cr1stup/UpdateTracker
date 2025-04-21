@@ -6,7 +6,7 @@ import backend.academy.scrapper.dto.AddLinkRequest;
 import backend.academy.scrapper.dto.LinkResponse;
 import backend.academy.scrapper.dto.ListLinksResponse;
 import backend.academy.scrapper.dto.RemoveLinkRequest;
-import backend.academy.scrapper.service.LinkService;
+import backend.academy.scrapper.service.link.LinkService;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;

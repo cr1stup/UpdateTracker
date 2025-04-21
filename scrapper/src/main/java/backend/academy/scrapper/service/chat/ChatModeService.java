@@ -1,4 +1,4 @@
-package backend.academy.scrapper.service;
+package backend.academy.scrapper.service.chat;
 
 import backend.academy.scrapper.dto.ChatMode;
 import java.time.LocalTime;

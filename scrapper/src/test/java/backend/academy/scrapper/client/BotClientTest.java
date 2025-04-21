@@ -39,7 +39,7 @@ public class BotClientTest {
         BotClient botClient = botClient();
 
         ApiErrorResponse response = botClient
-                .handleUpdates(new LinkUpdate(100L, URI.create("https://example.com.com"), "description", List.of()))
+                .handleUpdates(new LinkUpdate(100L, URI.create("https://example.com.com"), "description", List.of(), false))
                 .apiErrorResponse();
 
         Assertions.assertThat(response).extracting(ApiErrorResponse::code).isEqualTo("404");

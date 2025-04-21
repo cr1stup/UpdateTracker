@@ -1,7 +1,7 @@
 package backend.academy.scrapper.scheduler;
 
-import backend.academy.scrapper.service.BatchUpdateService;
-import backend.academy.scrapper.service.ChatModeService;
+import backend.academy.scrapper.service.update.BatchUpdateService;
+import backend.academy.scrapper.service.chat.ChatModeService;
 import backend.academy.scrapper.service.model.Mode;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;

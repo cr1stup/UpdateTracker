@@ -1,10 +1,10 @@
-package backend.academy.scrapper.service.jdbc;
+package backend.academy.scrapper.service.chat.jdbc;
 
 import backend.academy.scrapper.dto.ChatMode;
 import backend.academy.scrapper.exception.ChatModeNotFoundException;
 import backend.academy.scrapper.repository.jdbc.JdbcChatModeRepository;
-import backend.academy.scrapper.service.BatchUpdateService;
-import backend.academy.scrapper.service.ChatModeService;
+import backend.academy.scrapper.service.update.BatchUpdateService;
+import backend.academy.scrapper.service.chat.ChatModeService;
 import backend.academy.scrapper.service.model.Mode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
