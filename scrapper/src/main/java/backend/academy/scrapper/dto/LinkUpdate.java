@@ -5,4 +5,8 @@ import java.net.URI;
 import java.util.List;
 
 public record LinkUpdate(
-        @NotNull Long id, @NotNull URI url, @NotNull String description, @NotNull List<Long> tgChatIds) {}
+        @NotNull Long id, URI url, @NotNull String description, @NotNull List<Long> tgChatIds, @NotNull Boolean isBatch) {
+    public LinkUpdate withChatIds(@NotNull List<Long> newChatIds) {
+        return new LinkUpdate(id, url, description, newChatIds, isBatch);
+    }
+}

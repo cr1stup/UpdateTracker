@@ -3,12 +3,12 @@ package backend.academy.scrapper.scheduler;
 import backend.academy.scrapper.client.link.ClientFactory;
 import backend.academy.scrapper.client.link.LinkClient;
 import backend.academy.scrapper.config.ScrapperConfig;
+import backend.academy.scrapper.dto.EventInformation;
 import backend.academy.scrapper.dto.Link;
 import backend.academy.scrapper.dto.LinkInformation;
 import backend.academy.scrapper.dto.LinkUpdate;
-import backend.academy.scrapper.dto.EventInformation;
+import backend.academy.scrapper.service.DispatcherUpdatesService;
 import backend.academy.scrapper.service.LinkService;
-import backend.academy.scrapper.service.UpdateService;
 import java.net.URI;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -26,8 +26,8 @@ public class LinkUpdateScheduler {
     private final LinkService linkService;
     private final ScrapperConfig config;
     private final ClientFactory clientFactory;
-    private final UpdateService updateService;
     private final ThreadPoolTaskExecutor linkUpdateTaskExecutor;
+    private final DispatcherUpdatesService dispatcherUpdatesService;
 
     @Scheduled(fixedDelayString = "#{@'app-backend.academy.scrapper.config.ScrapperConfig'.scheduler.interval}")
     public void update() {
@@ -72,11 +72,11 @@ public class LinkUpdateScheduler {
                             log.info("Detected update for link {}", link.url());
                             EventInformation eventInformation = event.information();
                             log.info("Update from user {}", eventInformation.user());
-                            updateService.sendUpdatesToUsers(new LinkUpdate(
+                            dispatcherUpdatesService.dispatchUpdates(new LinkUpdate(
                                     link.id(),
                                     URI.create(link.url()),
                                     eventInformation.getFormattedInformation(),
-                                    linkService.getListOfChatId(link.id(), eventInformation.user())));
+                                    linkService.getListOfChatId(link.id(), eventInformation.user()), false));
                         },
                         () -> linkService.checkNow(link.id()));
     }
