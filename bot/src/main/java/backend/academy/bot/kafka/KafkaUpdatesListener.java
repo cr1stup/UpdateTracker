@@ -14,7 +14,7 @@ public class KafkaUpdatesListener {
 
     private final LinkNotificationService linkNotificationService;
 
-    @KafkaListener(topics = "${app.kafka.updates-topic-name}", groupId = "bot")
+    @KafkaListener(topics = "${app.kafka.updates-topic-name}", groupId = "${app.kafka.group-id}")
     @RetryableTopic(attempts = "1", dltStrategy = DltStrategy.FAIL_ON_ERROR, dltTopicSuffix = "_dlq")
     public void listenUpdate(LinkUpdate update) {
         linkNotificationService.notifyLinkUpdate(update);

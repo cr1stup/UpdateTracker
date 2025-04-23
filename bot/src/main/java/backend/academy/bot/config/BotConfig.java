@@ -8,5 +8,5 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record BotConfig(@NotEmpty String telegramToken, KafkaConfiguration kafka) {
 
-    public record KafkaConfiguration(String updatesTopicName) {}
+    public record KafkaConfiguration(String updatesTopicName, String groupId, String dlqGroupId) {}
 }

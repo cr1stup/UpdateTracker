@@ -2,6 +2,8 @@ app:
   telegram-token: ${TELEGRAM_TOKEN} # env variable
   kafka:
     updates-topic-name: updates
+    group-id: bot
+    dlq-group-id: bot-dlq
 
 spring:
   application:

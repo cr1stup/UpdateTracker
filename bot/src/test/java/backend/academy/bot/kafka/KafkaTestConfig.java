@@ -20,7 +20,7 @@ public class KafkaTestConfig {
         return dlqMessages;
     }
 
-    @KafkaListener(topics = "${app.kafka.updates-topic-name}_dlq", groupId = "dlq-test-group")
+    @KafkaListener(topics = "${app.kafka.updates-topic-name}_dlq", groupId = "${app.kafka.dlq-group-id}")
     public void listenDlq(LinkUpdate update) {
         dlqMessages.offer(update);
     }
