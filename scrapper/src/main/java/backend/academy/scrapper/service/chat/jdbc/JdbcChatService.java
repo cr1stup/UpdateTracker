@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 public class JdbcChatService implements ChatService {
 
     private final JdbcChatRepository repository;
-    private final JdbcChatModeService chatModeService;
 
     @Override
     public void registerChat(Long id) {
@@ -20,7 +19,6 @@ public class JdbcChatService implements ChatService {
             log.info("user [{}] not registered: chat already registered", id);
             throw new ChatAlreadyRegisteredException();
         }
-        chatModeService.setDefaultMode(id);
         repository.add(id);
     }
 

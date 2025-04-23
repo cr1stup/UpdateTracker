@@ -17,7 +17,7 @@ services:
     depends_on:
       - postgresql
     command:
-      - --changelog-file=master.xml
+      - --changelog-file=changelog/master.xml
       - --driver=org.postgresql.Driver
       - --url=jdbc:postgresql://postgresql:5432/scrapper
       - --username=postgres
@@ -28,17 +28,17 @@ services:
     networks:
       - backend
 
-  zoo:
+  zookeeper:
     image: confluentinc/cp-zookeeper:7.6.0
-    hostname: zoo
-    container_name: zoo
+    hostname: zookeeper
+    container_name: zookeeper
     ports:
       - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_SERVER_ID: 1
     volumes:
-      - zoo:/var/lib/zookeeper/data
+      - zookeeper:/var/lib/zookeeper/data
 
   kafka:
     image: confluentinc/cp-kafka:7.6.0
@@ -51,12 +51,12 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_ZOOKEEPER_CONNECT: zoo:2181
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_BROKER_ID: 1
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
-      - zoo
+      - zookeeper
     volumes:
       - kafka:/var/lib/kafka/data
 
@@ -72,7 +72,7 @@ services:
 volumes:
   postgresql:
   kafka:
-  zoo:
+  zookeeper:
   redis-data:
 
 networks:
