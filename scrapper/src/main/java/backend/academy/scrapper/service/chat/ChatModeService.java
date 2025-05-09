@@ -9,8 +9,6 @@ public interface ChatModeService {
 
     ChatMode getMode(Long chatId);
 
-    void setDefaultMode(Long chatId);
-
     List<Long> findAllChatIdsByMode(String modeName);
 
     LocalTime findTimeByChatId(Long chatId);

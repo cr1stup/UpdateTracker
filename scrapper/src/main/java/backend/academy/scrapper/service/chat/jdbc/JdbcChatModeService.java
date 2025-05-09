@@ -39,14 +39,9 @@ public class JdbcChatModeService implements ChatModeService {
     @Override
     public ChatMode getMode(Long chatId) {
         return chatModeRepository.findByChatId(chatId).orElseGet(() -> {
-            setDefaultMode(chatId);
+            setMode(chatId, Mode.IMMEDIATE.modeName(), null);
             return new ChatMode(chatId, Mode.IMMEDIATE.modeName(), null);
         });
-    }
-
-    @Override
-    public void setDefaultMode(Long chatId) {
-        setMode(chatId, Mode.IMMEDIATE.modeName(), null);
     }
 
     @Override

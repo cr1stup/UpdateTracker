@@ -60,9 +60,12 @@ public class JpaChatModeService implements ChatModeService {
         log.info("Getting mode: {}", chatId);
         ChatModeEntity chatModeEntity = chatModeRepository.findByChatId(chatId).orElseGet(() -> {
             ChatModeEntity newChatMode = new ChatModeEntity();
-            ModeEntity modeEntity = new ModeEntity();
-            modeEntity.name(Mode.IMMEDIATE.modeName());
-            modeRepository.save(modeEntity);
+
+            ModeEntity modeEntity = modeRepository.findByName(Mode.IMMEDIATE.modeName()).orElseGet(() -> {
+                ModeEntity newModeEntity = new ModeEntity();
+                newModeEntity.name(Mode.IMMEDIATE.modeName());
+                return modeRepository.save(newModeEntity);
+            });
 
             newChatMode.chatId(chatId);
             newChatMode.mode(modeEntity);
@@ -71,11 +74,6 @@ public class JpaChatModeService implements ChatModeService {
         });
         log.info("Current mode: {}", chatModeEntity.mode().name());
         return new ChatMode(chatId, chatModeEntity.mode().name(), chatModeEntity.time());
-    }
-
-    @Override
-    public void setDefaultMode(Long chatId) {
-        setMode(chatId, Mode.IMMEDIATE.modeName(), null);
     }
 
     @Override
