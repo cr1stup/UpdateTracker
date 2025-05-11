@@ -28,9 +28,14 @@ public class ListStateHandler implements StateHandler {
         Long chatId = update.message().chat().id();
         botRepository.setState(chatId, BotState.START);
 
-        var response = botService.getAllLinks(chatId).answer();
+        var response = botService.getAllLinks(chatId);
+        if (response.isError()) {
+            return new SendMessage(chatId, response.getErrorMessage());
+        }
 
-        if (response.links() == null || response.links().isEmpty()) {
+        var listLinks =  response.answer();
+
+        if (listLinks.links() == null || listLinks.links().isEmpty()) {
             log.info("user [{}] list is empty", chatId);
             return new SendMessage(chatId, BotMessages.EMPTY_LIST);
         }
@@ -39,7 +44,7 @@ public class ListStateHandler implements StateHandler {
         linksMessage.append("Список отслеживаемых ссылок:").append("%n");
 
         int id = 1;
-        for (var link : response.links()) {
+        for (var link : listLinks.links()) {
             linksMessage.append(id).append(". ").append(link.url()).append("%n");
             id++;
         }

@@ -25,7 +25,12 @@ public class CheckModeStateHandler implements StateHandler {
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        var currentMode = botService.getChatMode(chatId).answer();
+        var response = botService.getChatMode(chatId);
+        if (response.isError()) {
+            return new SendMessage(chatId, response.getErrorMessage());
+        }
+
+        var currentMode = response.answer();
         botRepository.setState(chatId, BotState.INPUT_MODE);
         return new SendMessage(chatId, getMessage(currentMode));
     }

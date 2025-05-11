@@ -21,7 +21,12 @@ public class DefaultLinkNotificationService implements LinkNotificationService {
     @Override
     public void notifyLinkUpdate(LinkUpdate linkUpdate) {
         linkUpdate.tgChatIds().forEach(chatId -> {
-            var listLinks = botService.getAllLinks(chatId).answer();
+            var getAllLinksResponse = botService.getAllLinks(chatId);
+            if (getAllLinksResponse.isError()) {
+                requestExecutor.execute(new SendMessage(chatId, getAllLinksResponse.getErrorMessage()));
+            }
+
+            var listLinks = getAllLinksResponse.answer();
 
             if (linkUpdate.isBatch()) {
                 requestExecutor.execute(

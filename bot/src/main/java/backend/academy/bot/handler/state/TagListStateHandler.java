@@ -31,9 +31,14 @@ public class TagListStateHandler implements StateHandler {
         List<String> userText = Arrays.stream(update.message().text().trim().split("\\s+"))
                 .filter(s -> !s.isEmpty())
                 .toList();
-        var response = botService.getAllLinks(chatId).answer();
+        
+        var response = botService.getAllLinks(chatId);
+        if (response.isError()) {
+            return new SendMessage(chatId, response.getErrorMessage());
+        }
 
-        if (response.links() == null || response.links().isEmpty()) {
+        var listLinks =  response.answer();
+        if (listLinks.links() == null || listLinks.links().isEmpty()) {
             log.info("user [{}] list is empty", chatId);
             return new SendMessage(chatId, BotMessages.EMPTY_LIST);
         }
@@ -43,7 +48,7 @@ public class TagListStateHandler implements StateHandler {
                 String first = userText.getFirst();
 
                 if ("all".equalsIgnoreCase(first)) {
-                    String allTags = response.links().stream()
+                    String allTags = listLinks.links().stream()
                             .flatMap(link -> link.tags().stream())
                             .distinct()
                             .collect(Collectors.joining(", "));
@@ -51,13 +56,13 @@ public class TagListStateHandler implements StateHandler {
                 }
 
                 if (!BotMessages.TAGLIST_NAME.equals(first)) {
-                    return buildTagLinksMessage(chatId, first, response.links());
+                    return buildTagLinksMessage(chatId, first, listLinks.links());
                 }
             }
             case 2 -> {
                 if (BotMessages.TAGLIST_NAME.equals(userText.getFirst())) {
                     String tagName = userText.get(1);
-                    return buildTagLinksMessage(chatId, tagName, response.links());
+                    return buildTagLinksMessage(chatId, tagName, listLinks.links());
                 }
             }
         }

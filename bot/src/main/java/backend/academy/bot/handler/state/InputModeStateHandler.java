@@ -34,7 +34,13 @@ public class InputModeStateHandler implements StateHandler {
         List<String> userText = Arrays.stream(update.message().text().trim().split("\\s+"))
                 .filter(s -> !s.isEmpty())
                 .toList();
-        var currentMode = botService.getChatMode(chatId).answer();
+
+        var getModeResponse = botService.getChatMode(chatId);
+        if (getModeResponse.isError()) {
+            return new SendMessage(chatId, getModeResponse.getErrorMessage());
+        }
+
+        var currentMode = getModeResponse.answer();
 
         if (userText.size() == 1 && Mode.IMMEDIATE.modeName().equalsIgnoreCase(userText.getFirst())) {
             if (currentMode.name().equalsIgnoreCase(Mode.IMMEDIATE.modeName())) {

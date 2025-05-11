@@ -29,7 +29,12 @@ public class UntrackStateHandler implements StateHandler {
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
 
-        var listLinks = botService.getAllLinks(chatId).answer();
+        var getAllLinksResponse = botService.getAllLinks(chatId);
+        if (getAllLinksResponse.isError()) {
+            return new SendMessage(chatId, getAllLinksResponse.getErrorMessage());
+        }
+
+        var listLinks = getAllLinksResponse.answer();
         if (listLinks.links() == null || listLinks.links().isEmpty()) {
             botRepository.setState(chatId, BotState.START);
             log.info("user [{}] list is empty", chatId);
@@ -45,11 +50,11 @@ public class UntrackStateHandler implements StateHandler {
             return new SendMessage(chatId, "Введите корректную ссылку");
         }
 
-        var response = botService.unlinkUrlFromUser(URI.create(link), chatId);
+        var unlinkResponse = botService.unlinkUrlFromUser(URI.create(link), chatId);
         botRepository.setState(chatId, BotState.START);
 
-        if (response.isError()) {
-            return new SendMessage(chatId, "Не удалось удалить ссылку: " + response.getErrorMessage());
+        if (unlinkResponse.isError()) {
+            return new SendMessage(chatId, "Не удалось удалить ссылку: " + unlinkResponse.getErrorMessage());
         }
 
         log.info("user [{}] remove link successfully", chatId);

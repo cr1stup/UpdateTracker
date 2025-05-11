@@ -41,11 +41,11 @@ public class FilterInputStateHandler implements StateHandler {
         var response = botService.linkUrlToUser(
                 botRepository.getLink(chatId), chatId, botRepository.getTags(chatId), botRepository.getFilters(chatId));
 
-        botRepository.setState(chatId, BotState.START);
-
         if (response.isError()) {
             return new SendMessage(chatId, "Не удалось сохранить ссылку: " + response.getErrorMessage());
         }
+
+        botRepository.setState(chatId, BotState.START);
 
         log.info("user [{}] save link successfully", chatId);
         return new SendMessage(chatId, "Ваша ссылка успешно сохранена для отслеживания!");
