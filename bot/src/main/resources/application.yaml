@@ -33,8 +33,13 @@ spring:
       bootstrap-servers: localhost:29092
     bootstrap-servers: localhost:29092
 
-scrapper:
-  url: http://localhost:8081
+client:
+  scrapper-url: http://localhost:8081
+  timeout:
+    connect: 3s
+    read: 3s
+    write: 3s
+    response: 3s
 
 server:
   port: 8080
