@@ -42,6 +42,11 @@ resilience4j:
         permitted-number-of-calls-in-half-open-state: 1
         wait-duration-in-open-state: 5s
 
+ratelimiter:
+  capacity: 10
+  refill-tokens: 10
+  refill-duration: 1m
+
 spring:
   application:
     name: Scrapper
