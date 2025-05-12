@@ -1,5 +1,7 @@
 package backend.academy.scrapper.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import backend.academy.scrapper.dto.ChatMode;
 import backend.academy.scrapper.service.chat.ChatModeService;
 import java.time.LocalTime;
@@ -14,7 +16,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ChatModeController.class)
 @Import({RateLimiterTestConfig.class})
@@ -36,24 +37,19 @@ public class RateLimiterTest {
     @SneakyThrows
     @DisplayName("GET /mode should return 429 after exceeding rate limit")
     public void getChatModeShouldReturn429AfterRateLimitExceeded() {
-        Mockito.when(chatModeService.getMode(1L))
-            .thenReturn(new ChatMode(1L, "immediate", LocalTime.of(3, 0)));
+        Mockito.when(chatModeService.getMode(1L)).thenReturn(new ChatMode(1L, "immediate", LocalTime.of(3, 0)));
         int capacity = 10;
 
         for (int i = 0; i < capacity; i++) {
-            mockMvc.perform(
-                    MockMvcRequestBuilders
-                        .get("/mode")
-                        .header("Tg-Chat-Id", 1L)
-                        .contentType("application/json"))
-                        .andExpect(status().isOk());
+            mockMvc.perform(MockMvcRequestBuilders.get("/mode")
+                            .header("Tg-Chat-Id", 1L)
+                            .contentType("application/json"))
+                    .andExpect(status().isOk());
         }
 
-        mockMvc.perform(
-                MockMvcRequestBuilders
-                    .get("/mode")
-                    .header("Tg-Chat-Id", 1L)
-                    .contentType("application/json"))
-                    .andExpect(status().is(429));
+        mockMvc.perform(MockMvcRequestBuilders.get("/mode")
+                        .header("Tg-Chat-Id", 1L)
+                        .contentType("application/json"))
+                .andExpect(status().is(429));
     }
 }

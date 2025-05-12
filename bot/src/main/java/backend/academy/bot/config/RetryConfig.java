@@ -14,24 +14,27 @@ public class RetryConfig {
 
     public static ExchangeFilterFunction createFilter(RetryProperties properties) {
         return (response, next) -> next.exchange(response)
-            .flatMap(clientResponse -> {
-                if (clientResponse.statusCode().isError()
-                    && properties.retryableCodes().contains(clientResponse.statusCode().value())) {
-                    return clientResponse.createError();
-                } else {
-                    return Mono.just(clientResponse);
-                }
-            }).retryWhen(createRetry(properties));
+                .flatMap(clientResponse -> {
+                    if (clientResponse.statusCode().isError()
+                            && properties
+                                    .retryableCodes()
+                                    .contains(clientResponse.statusCode().value())) {
+                        return clientResponse.createError();
+                    } else {
+                        return Mono.just(clientResponse);
+                    }
+                })
+                .retryWhen(createRetry(properties));
     }
 
     private static Retry createRetry(RetryProperties properties) {
         return RetryBackoffSpec.fixedDelay(properties.maxAttempts(), properties.waitDuration())
-            .filter(buildErrorFilter(properties.retryableCodes()))
-            .doBeforeRetry(retrySignal -> {
-                Throwable failure = retrySignal.failure();
-                long attempt = retrySignal.totalRetries() + 1;
-                log.warn("Retry attempt #{} due to: {}", attempt, failure.getMessage());
-            });
+                .filter(buildErrorFilter(properties.retryableCodes()))
+                .doBeforeRetry(retrySignal -> {
+                    Throwable failure = retrySignal.failure();
+                    long attempt = retrySignal.totalRetries() + 1;
+                    log.warn("Retry attempt #{} due to: {}", attempt, failure.getMessage());
+                });
     }
 
     private static Predicate<Throwable> buildErrorFilter(List<Integer> retryCodes) {

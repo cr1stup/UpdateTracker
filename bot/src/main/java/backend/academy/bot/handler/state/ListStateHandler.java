@@ -33,7 +33,7 @@ public class ListStateHandler implements StateHandler {
             return new SendMessage(chatId, response.getErrorMessage());
         }
 
-        var listLinks =  response.answer();
+        var listLinks = response.answer();
 
         if (listLinks.links() == null || listLinks.links().isEmpty()) {
             log.info("user [{}] list is empty", chatId);

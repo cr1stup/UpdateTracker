@@ -3,13 +3,13 @@ package backend.academy.scrapper.service.update;
 import backend.academy.scrapper.config.ScrapperConfig;
 import backend.academy.scrapper.dto.LinkUpdate;
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -23,10 +23,7 @@ public class FallbackUpdateService implements ImmediateUpdateService {
     @PostConstruct
     public void init() {
         transportMap = allTransports.stream()
-            .collect(Collectors.toMap(
-                ImmediateUpdateService::transportName,
-                Function.identity()
-            ));
+                .collect(Collectors.toMap(ImmediateUpdateService::transportName, Function.identity()));
     }
 
     @Override

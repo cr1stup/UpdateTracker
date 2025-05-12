@@ -65,11 +65,10 @@ public class DefaultBotService implements BotService {
         log.error("Fallback after retries failed, user {}, message: {}", id, e.getMessage());
 
         return OptionalAnswer.error(new ApiErrorResponse(
-            "Scrapper service is unavailable or unresponsive",
-            "503",
-            e.getClass().getSimpleName(),
-            "Сервис обработки запросов недоступен, повторите попытку позже",
-            List.of())
-        );
+                "Scrapper service is unavailable or unresponsive",
+                "503",
+                e.getClass().getSimpleName(),
+                "Сервис обработки запросов недоступен, повторите попытку позже",
+                List.of()));
     }
 }

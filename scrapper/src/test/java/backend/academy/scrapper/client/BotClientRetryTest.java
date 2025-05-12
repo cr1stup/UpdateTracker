@@ -1,5 +1,8 @@
 package backend.academy.scrapper.client;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+
 import backend.academy.scrapper.dto.LinkUpdate;
 import backend.academy.scrapper.service.update.HttpUpdateService;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -11,15 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
 @WireMockTest(httpPort = 9090)
-@TestPropertySource(properties = {
-    "client.bot-url=http://localhost:9090",
-    "retry.max-attempts=2",
-    "retry.retryable-codes=503"
-})
+@TestPropertySource(
+        properties = {"client.bot-url=http://localhost:9090", "retry.max-attempts=2", "retry.retryable-codes=503"})
 @SpringBootTest
 public class BotClientRetryTest {
 

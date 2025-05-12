@@ -1,5 +1,7 @@
 package backend.academy.bot.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import backend.academy.bot.dto.LinkUpdate;
 import backend.academy.bot.service.LinkNotificationService;
 import java.util.List;
@@ -14,7 +16,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(LinkUpdatesController.class)
 @Import({RateLimiterTestConfig.class})
@@ -40,7 +41,8 @@ public class RateLimiterTest {
     public void handleUpdatesShouldReturn429AfterRateLimitExceeded() {
         Mockito.doNothing().when(linkNotificationService).notifyLinkUpdate(update);
         int capacity = 10;
-        String requestBody = """
+        String requestBody =
+                """
         {
             "id": 123,
             "url": "https://example.com",
@@ -51,19 +53,15 @@ public class RateLimiterTest {
         """;
 
         for (int i = 0; i < capacity; i++) {
-            mockMvc.perform(
-                MockMvcRequestBuilders
-                    .post("/updates")
-                    .content(requestBody)
-                    .contentType("application/json"))
+            mockMvc.perform(MockMvcRequestBuilders.post("/updates")
+                            .content(requestBody)
+                            .contentType("application/json"))
                     .andExpect(status().isOk());
         }
 
-        mockMvc.perform(
-                MockMvcRequestBuilders
-                    .post("/updates")
-                    .content(requestBody)
-                    .contentType("application/json"))
-                    .andExpect(status().is(429));
+        mockMvc.perform(MockMvcRequestBuilders.post("/updates")
+                        .content(requestBody)
+                        .contentType("application/json"))
+                .andExpect(status().is(429));
     }
 }

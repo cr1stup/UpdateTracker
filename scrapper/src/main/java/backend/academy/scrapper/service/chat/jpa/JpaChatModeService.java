@@ -61,11 +61,13 @@ public class JpaChatModeService implements ChatModeService {
         ChatModeEntity chatModeEntity = chatModeRepository.findByChatId(chatId).orElseGet(() -> {
             ChatModeEntity newChatMode = new ChatModeEntity();
 
-            ModeEntity modeEntity = modeRepository.findByName(Mode.IMMEDIATE.modeName()).orElseGet(() -> {
-                ModeEntity newModeEntity = new ModeEntity();
-                newModeEntity.name(Mode.IMMEDIATE.modeName());
-                return modeRepository.save(newModeEntity);
-            });
+            ModeEntity modeEntity = modeRepository
+                    .findByName(Mode.IMMEDIATE.modeName())
+                    .orElseGet(() -> {
+                        ModeEntity newModeEntity = new ModeEntity();
+                        newModeEntity.name(Mode.IMMEDIATE.modeName());
+                        return modeRepository.save(newModeEntity);
+                    });
 
             newChatMode.chatId(chatId);
             newChatMode.mode(modeEntity);

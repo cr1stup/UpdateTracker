@@ -31,13 +31,13 @@ public class TagListStateHandler implements StateHandler {
         List<String> userText = Arrays.stream(update.message().text().trim().split("\\s+"))
                 .filter(s -> !s.isEmpty())
                 .toList();
-        
+
         var response = botService.getAllLinks(chatId);
         if (response.isError()) {
             return new SendMessage(chatId, response.getErrorMessage());
         }
 
-        var listLinks =  response.answer();
+        var listLinks = response.answer();
         if (listLinks.links() == null || listLinks.links().isEmpty()) {
             log.info("user [{}] list is empty", chatId);
             return new SendMessage(chatId, BotMessages.EMPTY_LIST);

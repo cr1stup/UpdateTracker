@@ -1,5 +1,7 @@
 package backend.academy.scrapper.client;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import backend.academy.scrapper.dto.LinkUpdate;
 import backend.academy.scrapper.service.update.HttpUpdateService;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
@@ -12,13 +14,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @WireMockTest(httpPort = 9090)
-@TestPropertySource(properties = {
-    "client.bot-url=http://localhost:9090",
-})
+@TestPropertySource(
+        properties = {
+            "client.bot-url=http://localhost:9090",
+        })
 public class BotClientCircuitBreakerTest {
 
     @Autowired

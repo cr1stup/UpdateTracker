@@ -7,7 +7,4 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @ConfigurationProperties(prefix = "retry", ignoreUnknownFields = false)
-public record RetryProperties(
-    int maxAttempts,
-    Duration waitDuration,
-    List<Integer> retryableCodes) {}
+public record RetryProperties(int maxAttempts, Duration waitDuration, List<Integer> retryableCodes) {}

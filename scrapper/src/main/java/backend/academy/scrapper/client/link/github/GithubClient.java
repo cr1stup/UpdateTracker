@@ -11,13 +11,13 @@ import backend.academy.scrapper.dto.EventInformation;
 import backend.academy.scrapper.dto.LinkInformation;
 import backend.academy.scrapper.dto.LinkUpdateEvent;
 import backend.academy.scrapper.util.LinkParser;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.net.URI;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,8 +29,11 @@ public class GithubClient implements LinkClient {
     private final ClientProperties properties;
 
     @Autowired
-    public GithubClient(WebClient.Builder webClientBuilder, ScrapperConfig config, ClientProperties properties,
-                        RetryProperties retryProperties) {
+    public GithubClient(
+            WebClient.Builder webClientBuilder,
+            ScrapperConfig config,
+            ClientProperties properties,
+            RetryProperties retryProperties) {
         this.webClient = webClientBuilder
                 .baseUrl(properties.githubUrl())
                 .defaultHeaders(headers -> {
@@ -54,19 +57,15 @@ public class GithubClient implements LinkClient {
     public LinkInformation fetchInformation(URI url) {
         Duration timeout = properties.timeout().global();
 
-        var profileInfo = executeRequest(
-            webClient,
-            "/repos" + url.getPath(),
-            ProfileInfo.class,
-            ProfileInfo.EMPTY,
-            timeout);
+        var profileInfo =
+                executeRequest(webClient, "/repos" + url.getPath(), ProfileInfo.class, ProfileInfo.EMPTY, timeout);
 
         var eventInfo = executeRequest(
-            webClient,
-            "/repos" + url.getPath() + "/issues",
-            GithubResponse[].class,
-            new GithubResponse[0],
-            timeout);
+                webClient,
+                "/repos" + url.getPath() + "/issues",
+                GithubResponse[].class,
+                new GithubResponse[0],
+                timeout);
 
         if (profileInfo == null || profileInfo.equals(ProfileInfo.EMPTY)) {
             return null;

@@ -10,12 +10,12 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ScrapperConfig(
-    @NotNull Scheduler scheduler,
-    @NotEmpty String githubToken,
-    StackOverflowCredentials stackOverflow,
-    AccessType databaseAccessType,
-    KafkaConfiguration kafka,
-    List<String> transportOrder) {
+        @NotNull Scheduler scheduler,
+        @NotEmpty String githubToken,
+        StackOverflowCredentials stackOverflow,
+        AccessType databaseAccessType,
+        KafkaConfiguration kafka,
+        List<String> transportOrder) {
     public record StackOverflowCredentials(@NotEmpty String key, @NotEmpty String accessToken) {}
 
     public record Scheduler(

@@ -21,25 +21,25 @@ import reactor.netty.http.client.HttpClient;
 public class ScrapperClientConfig {
 
     @Bean
-    public WebClient webClient(WebClient.Builder webClientBuilder, ClientProperties clientProperties, RetryProperties retryProperties) {
+    public WebClient webClient(
+            WebClient.Builder webClientBuilder, ClientProperties clientProperties, RetryProperties retryProperties) {
         HttpClient httpClient = HttpClient.create()
-            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, (int) clientProperties.timeout().connect().toMillis())
-            .responseTimeout(Duration.ofMillis(clientProperties.timeout().response().toMillis()))
-            .doOnConnected(conn -> conn
-                .addHandlerLast(new ReadTimeoutHandler(
-                    clientProperties.timeout().read().toMillis(),
-                    TimeUnit.MILLISECONDS))
-                .addHandlerLast(new WriteTimeoutHandler(
-                    clientProperties.timeout().write().toMillis(),
-                    TimeUnit.MILLISECONDS)));
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, (int)
+                        clientProperties.timeout().connect().toMillis())
+                .responseTimeout(
+                        Duration.ofMillis(clientProperties.timeout().response().toMillis()))
+                .doOnConnected(conn -> conn.addHandlerLast(new ReadTimeoutHandler(
+                                clientProperties.timeout().read().toMillis(), TimeUnit.MILLISECONDS))
+                        .addHandlerLast(new WriteTimeoutHandler(
+                                clientProperties.timeout().write().toMillis(), TimeUnit.MILLISECONDS)));
 
         return webClientBuilder
-            .clientConnector(new ReactorClientHttpConnector(httpClient))
-            .defaultStatusHandler(httpStatusCode -> true, clientResponse -> Mono.empty())
-            .defaultHeader("Content-Type", "application/json")
-            .baseUrl(clientProperties.scrapperUrl())
-            .filter(RetryConfig.createFilter(retryProperties))
-            .build();
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
+                .defaultStatusHandler(httpStatusCode -> true, clientResponse -> Mono.empty())
+                .defaultHeader("Content-Type", "application/json")
+                .baseUrl(clientProperties.scrapperUrl())
+                .filter(RetryConfig.createFilter(retryProperties))
+                .build();
     }
 
     @Bean

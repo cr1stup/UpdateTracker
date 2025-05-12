@@ -12,12 +12,12 @@ import backend.academy.scrapper.dto.EventInformation;
 import backend.academy.scrapper.dto.LinkInformation;
 import backend.academy.scrapper.dto.LinkUpdateEvent;
 import backend.academy.scrapper.util.LinkParser;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.net.URI;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,11 +29,12 @@ public class StackOverflowClient implements LinkClient {
     private final ClientProperties properties;
 
     @Autowired
-    public StackOverflowClient(WebClient.Builder webClientBuilder, ClientProperties properties, RetryProperties retryProperties) {
+    public StackOverflowClient(
+            WebClient.Builder webClientBuilder, ClientProperties properties, RetryProperties retryProperties) {
         this.webClient = webClientBuilder
-            .baseUrl(properties.stackoverflowUrl())
-            .filter(RetryConfig.createFilter(retryProperties))
-            .build();
+                .baseUrl(properties.stackoverflowUrl())
+                .filter(RetryConfig.createFilter(retryProperties))
+                .build();
         this.properties = properties;
     }
 

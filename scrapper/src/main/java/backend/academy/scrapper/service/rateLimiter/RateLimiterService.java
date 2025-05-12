@@ -12,6 +12,8 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +32,7 @@ public class RateLimiterService implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
+            throws IOException, ServletException {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String ip = getClientIp(httpRequest);
@@ -55,6 +57,14 @@ public class RateLimiterService implements Filter {
 
     private String getClientIp(HttpServletRequest request) {
         String xfHeader = request.getHeader("X-Forwarded-For");
-        return xfHeader != null ? xfHeader.split(",")[0] : request.getRemoteAddr();
+        if (xfHeader == null) {
+            return request.getRemoteAddr();
+        }
+
+        List<String> ips = Arrays.stream(xfHeader.trim().split("\\s*,\\s*"))
+                .filter(s -> !s.isEmpty())
+                .toList();
+
+        return ips.getFirst();
     }
 }
