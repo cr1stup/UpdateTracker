@@ -5,16 +5,17 @@ import backend.academy.scrapper.client.link.stackoverflow.dto.QuestionItem;
 import backend.academy.scrapper.client.link.stackoverflow.dto.QuestionResponse;
 import backend.academy.scrapper.client.link.stackoverflow.dto.StackOverflowItem;
 import backend.academy.scrapper.client.link.stackoverflow.dto.StackOverflowResponse;
+import backend.academy.scrapper.config.ClientProperties;
 import backend.academy.scrapper.dto.EventInformation;
 import backend.academy.scrapper.dto.LinkInformation;
 import backend.academy.scrapper.dto.LinkUpdateEvent;
 import backend.academy.scrapper.util.LinkParser;
 import java.net.URI;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -22,10 +23,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class StackOverflowClient implements LinkClient {
     private static final Pattern QUESTION_PATTERN = Pattern.compile("https://stackoverflow.com/questions/(\\d+).*");
     private final WebClient webClient;
+    private final ClientProperties properties;
 
     @Autowired
-    public StackOverflowClient(@Value("${api.stackoverflow.url}") String apiUrl, WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl(apiUrl).build();
+    public StackOverflowClient(WebClient.Builder webClientBuilder, ClientProperties properties) {
+        this.webClient = webClientBuilder.baseUrl(properties.stackoverflowUrl()).build();
+        this.properties = properties;
     }
 
     @Override
@@ -35,6 +38,7 @@ public class StackOverflowClient implements LinkClient {
 
     @Override
     public LinkInformation fetchInformation(URI url) {
+        Duration timeout = properties.timeout().global();
         String questionId = LinkParser.getQuestionId(url, QUESTION_PATTERN);
         String params = "?order=desc&sort=creation&site=stackoverflow&filter=withbody";
 
@@ -42,19 +46,22 @@ public class StackOverflowClient implements LinkClient {
                 webClient,
                 "/questions/" + questionId + "?site=stackoverflow",
                 StackOverflowResponse.class,
-                StackOverflowResponse.EMPTY);
+                StackOverflowResponse.EMPTY,
+                timeout);
 
         var answersInfo = executeRequest(
                 webClient,
                 "/questions/" + questionId + "/answers" + params,
                 QuestionResponse.class,
-                QuestionResponse.EMPTY);
+                QuestionResponse.EMPTY,
+                timeout);
 
         var commentsInfo = executeRequest(
                 webClient,
                 "/questions/" + questionId + "/comments" + params,
                 QuestionResponse.class,
-                QuestionResponse.EMPTY);
+                QuestionResponse.EMPTY,
+                timeout);
 
         if (questionInfo == null
                 || questionInfo.items() == null

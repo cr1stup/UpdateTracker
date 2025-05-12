@@ -3,18 +3,19 @@ package backend.academy.scrapper.client.link.github;
 import backend.academy.scrapper.client.link.LinkClient;
 import backend.academy.scrapper.client.link.github.dto.GithubResponse;
 import backend.academy.scrapper.client.link.github.dto.ProfileInfo;
+import backend.academy.scrapper.config.ClientProperties;
 import backend.academy.scrapper.config.ScrapperConfig;
 import backend.academy.scrapper.dto.EventInformation;
 import backend.academy.scrapper.dto.LinkInformation;
 import backend.academy.scrapper.dto.LinkUpdateEvent;
 import backend.academy.scrapper.util.LinkParser;
 import java.net.URI;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -22,18 +23,20 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class GithubClient implements LinkClient {
     private static final Pattern REPO_PATTERN = Pattern.compile("https://github.com/([^/]+)/([^/]+)");
     private final WebClient webClient;
+    private final ClientProperties properties;
 
     @Autowired
-    public GithubClient(
-            @Value("${api.github.url}") String apiUrl, WebClient.Builder webClientBuilder, ScrapperConfig config) {
+    public GithubClient(WebClient.Builder webClientBuilder, ScrapperConfig config, ClientProperties properties) {
         this.webClient = webClientBuilder
-                .baseUrl(apiUrl)
+                .baseUrl(properties.githubUrl())
                 .defaultHeaders(headers -> {
                     if (config.githubToken() != null && !config.githubToken().isEmpty()) {
                         headers.set("Authorization", "Bearer " + config.githubToken());
                     }
                 })
                 .build();
+
+        this.properties = properties;
     }
 
     @Override
@@ -43,9 +46,21 @@ public class GithubClient implements LinkClient {
 
     @Override
     public LinkInformation fetchInformation(URI url) {
-        var profileInfo = executeRequest(webClient, "/repos" + url.getPath(), ProfileInfo.class, ProfileInfo.EMPTY);
+        Duration timeout = properties.timeout().global();
+
+        var profileInfo = executeRequest(
+            webClient,
+            "/repos" + url.getPath(),
+            ProfileInfo.class,
+            ProfileInfo.EMPTY,
+            timeout);
+
         var eventInfo = executeRequest(
-                webClient, "/repos" + url.getPath() + "/issues", GithubResponse[].class, new GithubResponse[0]);
+            webClient,
+            "/repos" + url.getPath() + "/issues",
+            GithubResponse[].class,
+            new GithubResponse[0],
+            timeout);
 
         if (profileInfo == null || profileInfo.equals(ProfileInfo.EMPTY)) {
             return null;

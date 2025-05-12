@@ -14,14 +14,16 @@ app:
     updates-topic-name: updates
   message-transport: kafka
 
-bot:
-  url: http://localhost:8080
-
-api:
-  github:
-    url: https://api.github.com
-  stackoverflow:
-    url: https://api.stackexchange.com/2.3
+client:
+  bot-url: http://localhost:8080
+  github-url: https://api.github.com
+  stackoverflow-url: https://api.stackexchange.com/2.3
+  timeout:
+    connect: 3s
+    read: 3s
+    write: 3s
+    response: 3s
+    global: 6s
 
 spring:
   application:
