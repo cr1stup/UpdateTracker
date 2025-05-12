@@ -12,7 +12,7 @@ app:
   database-access-type: jpa
   kafka:
     updates-topic-name: updates
-  message-transport: kafka
+  message-transport: http
 
 client:
   bot-url: http://localhost:8080
@@ -24,6 +24,21 @@ client:
     write: 3s
     response: 3s
     global: 6s
+
+retry:
+  max-attempts: 3
+  wait-duration: 1s
+  retryable-codes: 500, 502, 503, 504, 429
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      apiClient:
+        sliding-window-size: 1
+        minimum-number-of-calls: 1
+        failure-rate-threshold: 100
+        permitted-number-of-calls-in-half-open-state: 1
+        wait-duration-in-open-state: 5s
 
 spring:
   application:

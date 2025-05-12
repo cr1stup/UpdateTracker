@@ -18,7 +18,6 @@ public interface LinkClient {
                 .retrieve()
                 .bodyToMono(type)
                 .timeout(timeout)
-                .onErrorReturn(defaultValue)
                 .block();
     }
 }

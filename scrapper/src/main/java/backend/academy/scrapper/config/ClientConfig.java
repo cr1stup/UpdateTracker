@@ -17,11 +17,11 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
 @Configuration
-@EnableConfigurationProperties(ClientProperties.class)
+@EnableConfigurationProperties({ClientProperties.class, RetryProperties.class})
 public class ClientConfig {
 
     @Bean
-    public WebClient webClient(WebClient.Builder webClientBuilder, ClientProperties clientProperties) {
+    public WebClient webClient(WebClient.Builder webClientBuilder, ClientProperties clientProperties, RetryProperties retryProperties) {
         HttpClient httpClient = HttpClient.create()
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, (int) clientProperties.timeout().connect().toMillis())
             .responseTimeout(Duration.ofMillis(clientProperties.timeout().response().toMillis()))
@@ -38,6 +38,7 @@ public class ClientConfig {
             .defaultStatusHandler(httpStatusCode -> true, clientResponse -> Mono.empty())
             .defaultHeader("Content-Type", "application/json")
             .baseUrl(clientProperties.botUrl())
+            .filter(RetryConfig.createFilter(retryProperties))
             .build();
     }
 

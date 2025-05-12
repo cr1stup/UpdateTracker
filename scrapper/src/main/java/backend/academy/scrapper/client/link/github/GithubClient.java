@@ -4,6 +4,8 @@ import backend.academy.scrapper.client.link.LinkClient;
 import backend.academy.scrapper.client.link.github.dto.GithubResponse;
 import backend.academy.scrapper.client.link.github.dto.ProfileInfo;
 import backend.academy.scrapper.config.ClientProperties;
+import backend.academy.scrapper.config.RetryConfig;
+import backend.academy.scrapper.config.RetryProperties;
 import backend.academy.scrapper.config.ScrapperConfig;
 import backend.academy.scrapper.dto.EventInformation;
 import backend.academy.scrapper.dto.LinkInformation;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -26,7 +29,8 @@ public class GithubClient implements LinkClient {
     private final ClientProperties properties;
 
     @Autowired
-    public GithubClient(WebClient.Builder webClientBuilder, ScrapperConfig config, ClientProperties properties) {
+    public GithubClient(WebClient.Builder webClientBuilder, ScrapperConfig config, ClientProperties properties,
+                        RetryProperties retryProperties) {
         this.webClient = webClientBuilder
                 .baseUrl(properties.githubUrl())
                 .defaultHeaders(headers -> {
@@ -34,6 +38,7 @@ public class GithubClient implements LinkClient {
                         headers.set("Authorization", "Bearer " + config.githubToken());
                     }
                 })
+                .filter(RetryConfig.createFilter(retryProperties))
                 .build();
 
         this.properties = properties;
@@ -45,6 +50,7 @@ public class GithubClient implements LinkClient {
     }
 
     @Override
+    @CircuitBreaker(name = "apiClient")
     public LinkInformation fetchInformation(URI url) {
         Duration timeout = properties.timeout().global();
 
