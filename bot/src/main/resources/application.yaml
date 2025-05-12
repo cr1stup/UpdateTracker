@@ -46,6 +46,11 @@ retry:
   wait-duration: 1s
   retryable-codes: 500, 502, 503, 504, 429
 
+ratelimiter:
+  capacity: 10
+  refill-tokens: 10
+  refill-duration: 1m
+
 resilience4j:
   circuitbreaker:
     instances:
