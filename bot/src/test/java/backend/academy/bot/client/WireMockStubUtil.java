@@ -32,6 +32,23 @@ public class WireMockStubUtil {
     }
 
     @SneakyThrows
+    public static void mockListLinksServerError() {
+        stubFor(get(urlPathMatching("/links"))
+            .withHeader("Tg-Chat-Id", equalTo("100"))
+            .willReturn(aResponse()
+                .withStatus(503)
+                .withHeader("Content-Type", "application/json")
+                .withBody(objectMapper.writeValueAsString(
+                    new ApiErrorResponse(
+                        "Scrapper service is unavailable or unresponsive",
+                        "503",
+                        "serverError",
+                        "Сервис обработки запросов недоступен, повторите попытку позже",
+                        List.of())
+                ))));
+    }
+
+    @SneakyThrows
     public static void mockListLinksSuccess() {
         stubFor(get(urlPathMatching("/links"))
                 .withHeader("Tg-Chat-Id", equalTo("100"))
