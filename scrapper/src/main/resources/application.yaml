@@ -12,7 +12,9 @@ app:
   database-access-type: jpa
   kafka:
     updates-topic-name: updates
-  message-transport: http
+  transport-order:
+    - http
+    - kafka
 
 client:
   bot-url: http://localhost:8080

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DefaultDispatcherUpdatesService implements DispatcherUpdatesService {
 
-    private final ImmediateUpdateService immediateUpdateService;
+    private final FallbackUpdateService updateService;
     private final ChatModeService chatModeService;
     private final DefaultBatchedLinkUpdateRepository batchedRepository;
 
@@ -21,7 +21,7 @@ public class DefaultDispatcherUpdatesService implements DispatcherUpdatesService
         List<Long> chatIdsImmediate = chatModeService.findAllChatIdsByMode(Mode.IMMEDIATE.modeName());
         List<Long> chatIdsDaily = chatModeService.findAllChatIdsByMode(Mode.DAILY.modeName());
 
-        immediateUpdateService.sendUpdatesToUsers(linkUpdate.withChatIds(chatIdsImmediate));
+        updateService.sendUpdatesToUsers(linkUpdate.withChatIds(chatIdsImmediate));
 
         for (Long chatId : chatIdsDaily) {
             batchedRepository.addToBatch(chatId, linkUpdate.withChatIds(List.of(chatId)));
