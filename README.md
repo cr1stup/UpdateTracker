@@ -1,6 +1,6 @@
 ![Build](https://github.com/central-university-dev/backend-academy-2025-spring-template/actions/workflows/build.yaml/badge.svg)
 
-# Link Tracker
+# Update Tracker
 
 <!-- этот файл можно и нужно менять -->
 
@@ -15,7 +15,7 @@
 * Bot
 * Scrapper
 
-Для работы требуется БД `PostgreSQL`. Присутствует опциональная зависимость на `Kafka`.
+Для работы требуется БД `PostgreSQL`. Используется кэширование с `Redis`, присутствует опциональная зависимость на `Kafka`.
 
 Для дополнительной справки: [HELP.md](./HELP.md)
 
