@@ -33,24 +33,25 @@ public class JpaChatModeService implements ChatModeService {
             return modeRepository.save(newMode);
         });
 
-        ChatModeEntity chatMode = chatModeRepository
-                .findByChatId(chatId)
-                .map(existing -> {
-                    existing.mode(modeEntity);
-                    existing.time(time);
-                    return existing;
-                })
-                .orElseGet(() -> {
-                    ChatModeEntity newChatMode = new ChatModeEntity();
-                    newChatMode.chatId(chatId);
-                    newChatMode.mode(modeEntity);
-                    newChatMode.time(time);
-                    return newChatMode;
-                });
+        var existingChatMode = chatModeRepository.findByChatId(chatId);
+
+        ChatModeEntity chatMode = existingChatMode
+            .map(existing -> {
+                existing.mode(modeEntity);
+                existing.time(time);
+                return existing;
+            })
+            .orElseGet(() -> {
+                ChatModeEntity newChatMode = new ChatModeEntity();
+                newChatMode.chatId(chatId);
+                newChatMode.mode(modeEntity);
+                newChatMode.time(time);
+                return newChatMode;
+            });
 
         chatModeRepository.save(chatMode);
 
-        if (modeName.equalsIgnoreCase(Mode.IMMEDIATE.modeName())) {
+        if (existingChatMode.isPresent() && modeName.equalsIgnoreCase(Mode.IMMEDIATE.modeName())) {
             batchUpdateService.sendBatchUpdateToUser(chatId);
         }
     }

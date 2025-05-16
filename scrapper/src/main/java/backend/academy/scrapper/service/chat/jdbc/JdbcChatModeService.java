@@ -25,13 +25,18 @@ public class JdbcChatModeService implements ChatModeService {
             chatModeRepository.saveMode(modeName);
         }
 
-        chatModeRepository
-                .findByChatId(chatId)
-                .ifPresentOrElse(
-                        existing -> chatModeRepository.update(new ChatMode(chatId, modeName, time)),
-                        () -> chatModeRepository.insert(new ChatMode(chatId, modeName, time)));
+        boolean isUpdate = chatModeRepository
+            .findByChatId(chatId)
+            .map(existing -> {
+                chatModeRepository.update(new ChatMode(chatId, modeName, time));
+                return true;
+            })
+            .orElseGet(() -> {
+                chatModeRepository.insert(new ChatMode(chatId, modeName, time));
+                return false;
+            });
 
-        if (modeName.equalsIgnoreCase(Mode.IMMEDIATE.modeName())) {
+        if (isUpdate && modeName.equalsIgnoreCase(Mode.IMMEDIATE.modeName())) {
             batchUpdateService.sendBatchUpdateToUser(chatId);
         }
     }
