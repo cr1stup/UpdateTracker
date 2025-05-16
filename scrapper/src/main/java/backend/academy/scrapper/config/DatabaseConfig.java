@@ -32,8 +32,8 @@ public class DatabaseConfig {
 
     @Bean
     @ConditionalOnProperty(name = "app.database-access-type", havingValue = "jdbc")
-    public ChatService jdbcChatService(JdbcChatRepository chatRepository) {
-        return new JdbcChatService(chatRepository);
+    public ChatService jdbcChatService(JdbcChatRepository chatRepository, JdbcChatModeService chatModeService) {
+        return new JdbcChatService(chatRepository, chatModeService);
     }
 
     @Bean
@@ -51,8 +51,8 @@ public class DatabaseConfig {
 
     @Bean
     @ConditionalOnProperty(name = "app.database-access-type", havingValue = "jpa")
-    public ChatService jpaChatService(JpaChatRepository jpaChatRepository) {
-        return new JpaChatService(jpaChatRepository);
+    public ChatService jpaChatService(JpaChatRepository jpaChatRepository, JpaChatModeService jpaChatModeService) {
+        return new JpaChatService(jpaChatRepository, jpaChatModeService);
     }
 
     @Bean

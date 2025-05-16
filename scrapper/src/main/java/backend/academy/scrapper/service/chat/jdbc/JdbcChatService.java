@@ -4,6 +4,7 @@ import backend.academy.scrapper.exception.ChatAlreadyRegisteredException;
 import backend.academy.scrapper.exception.ChatNotFoundException;
 import backend.academy.scrapper.repository.jdbc.JdbcChatRepository;
 import backend.academy.scrapper.service.chat.ChatService;
+import backend.academy.scrapper.service.model.Mode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,22 +12,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JdbcChatService implements ChatService {
 
-    private final JdbcChatRepository repository;
+    private final JdbcChatRepository chatRepository;
+    private final JdbcChatModeService chatModeService;
 
     @Override
-    public void registerChat(Long id) {
-        if (repository.isExists(id)) {
-            log.info("user [{}] not registered: chat already registered", id);
+    public void registerChat(Long chatId) {
+        if (chatRepository.isExists(chatId)) {
+            log.info("user [{}] not registered: chat already registered", chatId);
             throw new ChatAlreadyRegisteredException();
         }
-        repository.add(id);
+        chatRepository.add(chatId);
+        chatModeService.setMode(chatId, Mode.IMMEDIATE.modeName(), null);
     }
 
     @Override
     public void deleteChat(Long id) {
-        if (!repository.isExists(id)) {
+        if (!chatRepository.isExists(id)) {
             throw new ChatNotFoundException();
         }
-        repository.remove(id);
+        chatRepository.remove(id);
     }
 }
